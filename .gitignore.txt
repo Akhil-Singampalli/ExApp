@@ -1,0 +1,8 @@
+
+### Eclipse ##
+.metadata
+.settings/
+/bin/
+/build/
+*.war
+**/classes/
