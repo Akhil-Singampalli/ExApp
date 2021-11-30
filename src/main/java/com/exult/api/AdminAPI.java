@@ -14,31 +14,42 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.exult.dto.PatientsDTO;
-import com.exult.service.PatientsService;
+import com.exult.dto.AdminDTO;
+import com.exult.service.AdminService;
+
+
 
 @Validated
 @CrossOrigin
 @RestController
-@RequestMapping("/patientAPI")
-public class PatientAPI {
-
+@RequestMapping("/adminAPI")
+public class AdminAPI {
+	
 	@Autowired
-	private PatientsService patientsService;
+	private AdminService adminService;
 	
 	@Autowired
 	private Environment environment;
 	
-	
-	
-	@RequestMapping(value = "/patientRegister", method = RequestMethod.POST)
-	public ResponseEntity<String> registerPatient(@RequestBody @Valid PatientsDTO patient){
+	@RequestMapping(value = "/Login",method = RequestMethod.POST)
+	public ResponseEntity<AdminDTO> authenticatePatient(@RequestBody AdminDTO admin) {
 		try {
-			patientsService.registerPatient(patient);
+			AdminDTO adminFromDB = adminService.authenticateAdmin(admin.getContactNumber(), admin.getPassword());
+			return new ResponseEntity<AdminDTO>(adminFromDB, HttpStatus.OK);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/adminRegister", method = RequestMethod.POST)
+	public ResponseEntity<String> registerPatient(@RequestBody @Valid AdminDTO admin){
+		try {
+			adminService.registerAdmin(admin);
 			return new ResponseEntity<String>("UserAPI.REGISTER_USER_SUCCESS1"+"UserAPI.REGISTER_USER_SUCCESS2",HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}
 	}
 	
+
 }
