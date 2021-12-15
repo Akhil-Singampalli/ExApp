@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.exult.dto.AdminDTO;
+import com.exult.dto.DoctorsDTO;
 import com.exult.service.AdminService;
 
 
@@ -42,7 +43,7 @@ public class AdminAPI {
 	}
 	
 	@RequestMapping(value = "/adminRegister", method = RequestMethod.POST)
-	public ResponseEntity<String> registerPatient(@RequestBody @Valid AdminDTO admin){
+	public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminDTO admin){
 		try {
 			adminService.registerAdmin(admin);
 			return new ResponseEntity<String>("UserAPI.REGISTER_USER_SUCCESS1"+"UserAPI.REGISTER_USER_SUCCESS2",HttpStatus.OK);
@@ -51,5 +52,14 @@ public class AdminAPI {
 		}
 	}
 	
+	@RequestMapping(value = "/docRegister", method = RequestMethod.POST)
+	public ResponseEntity<String> registerDoctor(@RequestBody @Valid DoctorsDTO doc){
+		try {
+			adminService.addDoctor(doc);
+			return new ResponseEntity<String>("UserAPI.REGISTER_USER_SUCCESS1"+"UserAPI.REGISTER_USER_SUCCESS2",HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
 
 }

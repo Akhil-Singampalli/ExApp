@@ -16,6 +16,9 @@ public class PatientsServiceImpl  implements PatientsService{
 
 	@Autowired
 	private PatientRepo patientRepo;
+	
+	@Autowired
+	private EmailSenderService emailSenderService;
 
 	@Override
 	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {
@@ -71,6 +74,9 @@ public class PatientsServiceImpl  implements PatientsService{
 			patientNew.setPatientName(patient.getPatientName());
 			
 			patientRepo.save(patientNew);
+			
+			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
+			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
 		}
 		return "success";
 	}
