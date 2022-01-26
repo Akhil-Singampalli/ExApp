@@ -1,11 +1,21 @@
 package com.exult.entity;
 
-import java.util.Objects;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,18 +25,29 @@ public class Patients {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer patientId;
+	@Column(name = "idpatient")
+	private Integer idPatient;
+	@Column(name = "patientname")
 	private String patientName;
+	@Column(name = "emailid")
 	private String emailId;
+	@Column(name = "contactnumber")
 	private String contactNumber;
+	@Column(name = "password")
 	private String password;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "patientDataIdpatientData")
+	private PatientsData patientsData;
 	
-	public Integer getPatientId() {
-		return patientId;
+	
+	
+	
+	public Integer getIdPatient() {
+		return idPatient;
 	}
-	public void setPatientId(Integer patientId) {
-		this.patientId = patientId;
+	public void setIdPatient(Integer patientId) {
+		this.idPatient = patientId;
 	}
 	public String getPatientName() {
 		return patientName;
@@ -53,10 +74,21 @@ public class Patients {
 		this.password = password;
 	}
 	
+	public PatientsData getPatientsData() {
+		return patientsData;
+	}
+	public void setPatientsData(PatientsData patientsData) {
+		this.patientsData = patientsData;
+	}
+	
+	
+	
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(contactNumber, emailId, password, patientId, patientName);
+		return Objects.hash(contactNumber, emailId, password, idPatient, patientName);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -67,12 +99,12 @@ public class Patients {
 			return false;
 		Patients other = (Patients) obj;
 		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(emailId, other.emailId)
-				&& Objects.equals(password, other.password) && Objects.equals(patientId, other.patientId)
+				&& Objects.equals(password, other.password) && Objects.equals(idPatient, other.idPatient)
 				&& Objects.equals(patientName, other.patientName);
 	}
 	@Override
 	public String toString() {
-		return "Patients [patientId=" + patientId + ", patientName=" + patientName + ", emailId=" + emailId
+		return "Patients [patientId=" + idPatient + ", patientName=" + patientName + ", emailId=" + emailId
 				+ ", contactNumber=" + contactNumber + ", password=" + password + "]";
 	}
 	

@@ -1,27 +1,40 @@
 package com.exult.dto;
 
+import java.util.List;
+import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import com.exult.entity.Appointment;
+import com.exult.entity.PatientsData;
 
 public class PatientsDTO {
 
-	private Integer patientId;
-//	@Pattern(regexp ="([A-Za-z])+(\\s[A-Za-z]+)*", message = "{invalid.customer.format}")
-//	@NotNull
+	private Integer IdPatient;
+	@Pattern(regexp ="([A-Za-z])+(\\s[A-Za-z]+)*", message = "{invalid.customer.format}")
+	@NotNull
 	private String patientName;
-//	@NotNull(message = "{email.abscent}")
-//	@Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+" ,message = "{invalid.email.format}")
+	@NotNull(message = "{email.abscent}")
+	@Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+" ,message = "{invalid.email.format}")
 	private String emailId;
-//	@Pattern(regexp = "[6-9][0-9]{9}",message = "{invalid.contactnumber.format}")
+	@Pattern(regexp = "[6-9][0-9]{9}",message = "{invalid.contactnumber.format}")
 	private String contactNumber;
 	
 	private String password;
+	
+	private List<Appointment> appointments;
+	
+	private PatientsDataDTO patientData;
+	
+	private DataFieldDTO dataFieldDTO;
 
 	public Integer getPatientId() {
-		return patientId;
+		return IdPatient;
 	}
 
 	public void setPatientId(Integer patientId) {
-		this.patientId = patientId;
+		this.IdPatient = patientId;
 	}
 
 	public String getPatientName() {
@@ -55,6 +68,31 @@ public class PatientsDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public PatientsDataDTO getPatientData() {
+		return patientData;
+	}
+
+	public void setPatientDataDTO(PatientsDataDTO patientData2) {
+		this.patientData = patientData2;
+	}
+
+	public DataFieldDTO getDataFieldDTO() {
+		return dataFieldDTO;
+	}
+
+	public void setDataFieldDTO(DataFieldDTO dataFieldDTO) {
+		this.dataFieldDTO = dataFieldDTO;
+	}
+	
 	
 	
 }
