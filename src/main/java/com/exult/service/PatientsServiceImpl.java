@@ -1,13 +1,23 @@
 package com.exult.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exult.dto.DataFieldDTO;
 import com.exult.dto.PatientsDTO;
+import com.exult.dto.PatientsDataDTO;
+import com.exult.entity.DataField;
 import com.exult.entity.Patients;
+import com.exult.entity.PatientsData;
 import com.exult.exception.ExappException;
+import com.exult.repository.DataFieldRepo;
+import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
 
 @Service(value = "patientService")
@@ -18,40 +28,43 @@ public class PatientsServiceImpl  implements PatientsService{
 	private PatientRepo patientRepo;
 	
 	@Autowired
+	private PatientDataRepo patientDataRepo;
+	
+	@Autowired
+	private DataFieldRepo dataFieldRepo;
+	
+	@Autowired
 	private EmailSenderService emailSenderService;
 
 	@Override
 	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {
 		
-		Patients optPatients = patientRepo.findByContactNumber(contactNumber);
+		Optional<Patients> optPatients = patientRepo.findByContactNumber(contactNumber);
+		Patients patient = optPatients.orElseThrow(() -> new ExappException(""));
 		
-		if(optPatients == null) {
+		if(patient == null) {
 			throw new ExappException("PatientService.INVALID_CREDENTIALS");
 		}
 		
-		String passwordFromDB = optPatients.getPassword();
+		String passwordFromDB = patient.getPassword();
 		
-		if(optPatients != null) {
-			try {
-		
-				if(password.equals(passwordFromDB)){
-					
+		try {
 
-					PatientsDTO patientObj = new PatientsDTO();
-			
-					patientObj.setContactNumber(optPatients.getContactNumber());
-					patientObj.setEmailId(optPatients.getEmailId());
-					patientObj.setPatientId(optPatients.getPatientId());
-					patientObj.setPatientName(optPatients.getPatientName());
-			
-					return patientObj;
-				}else
-					throw new ExappException("PatientService.INVALID_CREDENTIALS");
-			}catch (Exception e) {
-				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
-			}
-		} else {
-			throw new ExappException("PatientService.INVALID_CREDENTIALS");
+			if(password.equals(passwordFromDB)){
+				
+
+				PatientsDTO patientObj = new PatientsDTO();
+		
+				patientObj.setContactNumber(patient.getContactNumber());
+				patientObj.setEmailId(patient.getEmailId());
+				patientObj.setPatientId(patient.getIdPatient());
+				patientObj.setPatientName(patient.getPatientName());
+		
+				return patientObj;
+			}else
+				throw new ExappException("PatientService.INVALID_CREDENTIALS");
+		}catch (Exception e) {
+			throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 		}
 			
 	}
@@ -59,19 +72,61 @@ public class PatientsServiceImpl  implements PatientsService{
 	@Override
 	public String registerPatient(PatientsDTO patient) throws ExappException {
 		
-		Patients optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
-		Patients optPatientE = patientRepo.findByEmailId(patient.getEmailId());
 		
-		if(optPatientC != null || optPatientE != null) {
+		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
+		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+		
+		if(optPatientC == null && optPatientE == null) {
 			throw new ExappException("PatientService.EXISTING_CONTACT_NUMBER");
 		}
 		else {
 			Patients patientNew = new Patients();
 			
+			patientNew.setPatientName(patient.getPatientName());
 			patientNew.setContactNumber(patient.getContactNumber());
 			patientNew.setEmailId(patient.getEmailId());
 			patientNew.setPassword(patient.getPassword());
-			patientNew.setPatientName(patient.getPatientName());
+			
+	
+			PatientsData patientsData = new PatientsData();
+			
+			List<DataField> datafieldlist = new ArrayList<>();
+			
+			DataField dataField = new DataField();
+						
+			dataField.setFieldName("Name");
+			dataField.setFieldType("Type");
+			dataField.setFieldValue("Value");
+			
+			dataField.setPatientData(patientsData);
+			
+			dataFieldRepo.save(dataField);
+			
+			datafieldlist.add(dataField);
+			
+//			for(DataField field : patient.getPatientData().getDataField()) {
+//				
+//				DataField dataField = new DataField();
+//				
+//				
+//				dataField.setFieldName(field.getFieldName());
+//				dataField.setFieldType(field.getFieldType());
+//				dataField.setFieldValue(field.getFieldValue());
+//				
+//				dataField.setPatientData(patientsData);
+//				
+//				dataFieldRepo.save(dataField);
+//				
+//				datafieldlist.add(dataField);
+//			}
+
+//			patientsData.setDataField(datafieldlist);
+		
+			
+			
+			patientDataRepo.save(patientsData);
+			
+			patientNew.setPatientsData(patientsData);
 			
 			patientRepo.save(patientNew);
 			
@@ -79,6 +134,34 @@ public class PatientsServiceImpl  implements PatientsService{
 			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
 		}
 		return "success";
+	}
+
+	@Override
+	public PatientsDTO fetchPatientData(Integer patientId) throws ExappException {
+		
+		
+		Optional<Patients> optPat = patientRepo.findById(patientId);
+		Patients patient = optPat.orElseThrow(()-> new ExappException(""));
+		
+		
+		
+		if(patient != null) {
+			
+			PatientsDTO patientDTO = new PatientsDTO();
+			patientDTO.setPatientName(patient.getPatientName());
+			patientDTO.setEmailId(patient.getEmailId());
+			patientDTO.setContactNumber(patient.getContactNumber());
+//			patientDTO.setPatientData(patient.getPatientData());
+			
+			PatientsDataDTO patientsDataDTO = new PatientsDataDTO();
+			
+			DataFieldDTO dataFieldDTO = new DataFieldDTO();
+			
+			
+			return patientDTO;
+		}
+		return null;
+				
 	}
 	
 }

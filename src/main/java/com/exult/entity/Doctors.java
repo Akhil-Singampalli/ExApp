@@ -1,31 +1,44 @@
 package com.exult.entity;
 
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="DOCTORS")
+@Table(name="DOCTOR")
 public class Doctors {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer doctorId;
+	@Column(name = "iddoctor")
+	private Integer IdDoctor;
+	@Column(name = "docname")
 	private String doctorName;
+	@Column(name = "emailid")
 	private String emailId;
+	@Column(name = "contactnumber")
 	private String contactNumber;
 	private String password;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idDoctor")
+	private List<Appointment> appointment;
+	
 	
 	public Integer getDoctorId() {
-		return doctorId;
+		return IdDoctor;
 	}
 	public void setDoctorId(Integer doctorId) {
-		this.doctorId = doctorId;
+		this.IdDoctor = doctorId;
 	}
 	public String getDoctorName() {
 		return doctorName;
@@ -53,12 +66,12 @@ public class Doctors {
 	}
 	@Override
 	public String toString() {
-		return "Doctors [doctorId=" + doctorId + ", doctorName=" + doctorName + ", emailId=" + emailId
+		return "Doctors [doctorId=" + IdDoctor + ", doctorName=" + doctorName + ", emailId=" + emailId
 				+ ", contactNumber=" + contactNumber + ", password=" + password + "]";
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(contactNumber, doctorId, doctorName, emailId, password);
+		return Objects.hash(contactNumber, IdDoctor, doctorName, emailId, password);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -69,7 +82,7 @@ public class Doctors {
 		if (getClass() != obj.getClass())
 			return false;
 		Doctors other = (Doctors) obj;
-		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(doctorId, other.doctorId)
+		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(IdDoctor, other.IdDoctor)
 				&& Objects.equals(doctorName, other.doctorName) && Objects.equals(emailId, other.emailId)
 				&& Objects.equals(password, other.password);
 	}

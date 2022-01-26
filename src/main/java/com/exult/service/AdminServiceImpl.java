@@ -1,19 +1,32 @@
 package com.exult.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.exult.dto.AdminDTO;
+import com.exult.dto.DataFieldDTO;
 import com.exult.dto.DoctorsDTO;
 import com.exult.dto.PatientsDTO;
+import com.exult.dto.PatientsDataDTO;
 import com.exult.entity.Admin;
+import com.exult.entity.DataField;
 import com.exult.entity.Doctors;
 import com.exult.entity.Patients;
+import com.exult.entity.PatientsData;
 import com.exult.exception.ExappException;
 import com.exult.repository.AdminRepo;
+import com.exult.repository.DataFieldRepo;
 import com.exult.repository.DoctorRepo;
+import com.exult.repository.PatientDataRepo;
+import com.exult.repository.PatientRepo;
 
 @Service(value = "adminService")
 @Transactional
@@ -24,11 +37,20 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private DoctorRepo docRepo;
+	
+	@Autowired
+	private PatientRepo patRepo;
+	
+	@Autowired
+	private PatientDataRepo patientDataRepo; 
+	
+	@Autowired
+	private DataFieldRepo dataFieldRepo;
 
 	@Override
 	public AdminDTO authenticateAdmin(String contactNumber, String password) throws ExappException {
 		
-Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
+		Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
 		
 		if(optAdmin == null) {
 			throw new ExappException("PatientService.INVALID_CREDENTIALS");
@@ -101,6 +123,89 @@ Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
 		}
 		return "success";
 	}
+
+//	@Override
+//	public String patientTempEdit(PatientsDataDTO patientsDataTemp) throws ExappException {
+//		
+//		Iterable<Patients> patientsAll = patRepo.findAll();
+//		List<DataField> list = new ArrayList<DataField>();
+//		PatientsData patientsData = new PatientsData();
+//		
+//		
+//		for(Patients patient : patientsAll) {
+//			
+//			patientsData.setDataField(list);
+//			patientsData.setIdPatient(patient.getIdPatient());
+//			
+//			patient.setContactNumber(patient.getContactNumber());
+//			patient.setEmailId(patient.getEmailId());
+//			patient.setPassword(patient.getPassword());
+//			patient.setPatientName(patient.getPatientName());
+//			patient.setAppointment(patient.getAppointment());
+//			
+//			patient.setIdPatient(patient.getIdPatient());
+//			patient.setPatientsData(patientsData);
+//			
+//			System.out.println(patient);
+//			
+////			patRepo.save(patient);
+//		}
+//		
+//		return "success";
+//	}
+
+	@Override
+	public String patientTempEdit(PatientsDataDTO patientsDataTemp) throws ExappException {
+		
+		Iterable<Patients> patientAll = patRepo.findAll();
+		
+		List<DataFieldDTO> newdataFieldList = patientsDataTemp.getDataField();
+		
+												
+		for(Patients patient : patientAll) {
+
+			PatientsData patientsData = patient.getPatientsData();
+			
+					for(DataFieldDTO dataField : newdataFieldList) {
+						
+						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
+						
+						boolean olddataflag = optdataold.isPresent();
+						
+						
+				if(olddataflag) {	
+						
+						DataField dataold = optdataold.get();
+
+						dataold.setFieldId(dataold.getFieldId());
+						dataold.setFieldName(dataField.getFieldName());
+						dataold.setFieldType(dataField.getFieldType());
+						dataold.setFieldValue(dataold.getFieldValue());
+						
+						dataold.setPatientData(dataold.getPatientData());
+						
+						dataFieldRepo.save(dataold);
 	
+					}
+					else {
+						
+						DataField datanew = new DataField();
+							
+						datanew.setFieldName(dataField.getFieldName());
+						datanew.setFieldType(dataField.getFieldType());
+						datanew.setFieldValue(dataField.getFieldValue());
+						datanew.setPatientData(patientsData);
+						
+						dataFieldRepo.save(datanew);
+					}
+				patientDataRepo.save(patientsData);
+				}
+					
+				patRepo.save(patient);
+		}
+		
+		return null;
+	
+	}
 }
 

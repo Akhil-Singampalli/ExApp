@@ -1,11 +1,15 @@
 package com.exult.entity;
 
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +23,11 @@ public class Admin {
 	private String emailId;
 	private String contactNumber;
 	private String password;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idAdmin")
+	private List<Appointment> appointment;
+	
 	public Integer getAdminId() {
 		return adminId;
 	}

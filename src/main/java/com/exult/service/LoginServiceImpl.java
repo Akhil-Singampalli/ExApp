@@ -1,5 +1,7 @@
 package com.exult.service;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,8 @@ public class LoginServiceImpl implements LoginService{
 	@Override
 	public UserDTO authUser(String contactNumber, String password) throws ExappException {
 		
-		Patients optPatients = patientRepo.findByContactNumber(contactNumber);
+		Optional<Patients> optPatients = patientRepo.findByContactNumber(contactNumber);
+		Patients patient = optPatients.orElseThrow(() -> new ExappException(""));
 		Doctors optDoctors = doctorRepo.findByContactNumber(contactNumber);
 		Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
 		
@@ -43,16 +46,16 @@ public class LoginServiceImpl implements LoginService{
 		
 		if(optPatients != null) {
 			try {
-				String passwordFromDB = optPatients.getPassword();
+				String passwordFromDB = patient.getPassword();
 				if(password.equals(passwordFromDB)){
 					
 
 					UserDTO userObj = new UserDTO();
 			
-					userObj.setContactNumber(optPatients.getContactNumber());
-					userObj.setEmailId(optPatients.getEmailId());
-					userObj.setUserId(optPatients.getPatientId());
-					userObj.setUserName(optPatients.getPatientName());
+					userObj.setContactNumber(patient.getContactNumber());
+					userObj.setEmailId(patient.getEmailId());
+					userObj.setUserId(patient.getIdPatient());
+					userObj.setUserName(patient.getPatientName());
 			
 					return userObj;
 				}else
