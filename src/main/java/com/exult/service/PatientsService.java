@@ -1,7 +1,11 @@
 package com.exult.service;
 
+import java.util.List;
+
+import com.exult.dto.DataFieldDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
+import com.exult.entity.DataField;
 import com.exult.exception.ExappException;
 
 public interface PatientsService {
@@ -10,5 +14,5 @@ public interface PatientsService {
 	
 	public String registerPatient(PatientsDTO patient) throws ExappException;
 	
-	public PatientsDTO fetchPatientData(Integer patientId) throws ExappException;
+	public List<DataField> fetchPatientData(Integer patientId) throws ExappException;
 }

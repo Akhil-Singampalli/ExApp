@@ -73,10 +73,10 @@ public class PatientsServiceImpl  implements PatientsService{
 	public String registerPatient(PatientsDTO patient) throws ExappException {
 		
 		
-		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
-		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+//		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
+//		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
 		
-		if(optPatientC == null && optPatientE == null) {
+		if(false) {
 			throw new ExappException("PatientService.EXISTING_CONTACT_NUMBER");
 		}
 		else {
@@ -137,30 +137,35 @@ public class PatientsServiceImpl  implements PatientsService{
 	}
 
 	@Override
-	public PatientsDTO fetchPatientData(Integer patientId) throws ExappException {
+	public List<DataField> fetchPatientData(Integer patientId) throws ExappException {
 		
 		
 		Optional<Patients> optPat = patientRepo.findById(patientId);
 		Patients patient = optPat.orElseThrow(()-> new ExappException(""));
 		
+		List<DataField> dataFields = dataFieldRepo.findByPatientData(patient.getPatientsData());
+		
+//		
+//		if(dataFieldDTOs != null && patient != null) {
+//			
+//			PatientsDTO patientDTO = new PatientsDTO();
+//			patientDTO.setPatientName(patient.getPatientName());
+//			patientDTO.setEmailId(patient.getEmailId());
+//			patientDTO.setContactNumber(patient.getContactNumber());
+//			
+//			
+//			PatientsDataDTO patientsDataDTO = new PatientsDataDTO();
+//			patientsDataDTO.setId_patient_data(patient.getPatientsData().getId_patient_data());
+//			
+//			
+//			
+//			patientDTO.setPatientDataDTO(patientsDataDTO);
+//			
+			
+			
+			return dataFields;
 		
 		
-		if(patient != null) {
-			
-			PatientsDTO patientDTO = new PatientsDTO();
-			patientDTO.setPatientName(patient.getPatientName());
-			patientDTO.setEmailId(patient.getEmailId());
-			patientDTO.setContactNumber(patient.getContactNumber());
-//			patientDTO.setPatientData(patient.getPatientData());
-			
-			PatientsDataDTO patientsDataDTO = new PatientsDataDTO();
-			
-			DataFieldDTO dataFieldDTO = new DataFieldDTO();
-			
-			
-			return patientDTO;
-		}
-		return null;
 				
 	}
 	
