@@ -14,12 +14,6 @@ public class PatientsDataDTO {
 	
 	private Integer id_patient_data;
 	
-	private List<DataFieldDTO> dataField;
-
-	private PatientsDTO patients;
-	
-	
-
 	public Integer getId_patient_data() {
 		return id_patient_data;
 	}
@@ -28,33 +22,9 @@ public class PatientsDataDTO {
 		this.id_patient_data = id_patient_data;
 	}
 
-	public PatientsDTO getPatients() {
-		return patients;
-	}
-
-	public void setPatients(PatientsDTO patients) {
-		this.patients = patients;
-	}
-
-	public List<DataFieldDTO> getDataField() {
-		return dataField;
-	}
-
-	public void setDataField(List<DataFieldDTO> dataField) {
-		this.dataField = dataField;
-	}
-
-	@Override
-	public String toString() {
-		return "PatientsDataDTO [id_patient_data=" + id_patient_data + ", dataField=" + dataField + ", patients="
-				+ patients + ", getId_patient_data()=" + getId_patient_data() + ", getPatients()=" + getPatients()
-				+ ", getDataField()=" + getDataField() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataField, id_patient_data, patients);
+		return Objects.hash(id_patient_data);
 	}
 
 	@Override
@@ -66,9 +36,21 @@ public class PatientsDataDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		PatientsDataDTO other = (PatientsDataDTO) obj;
-		return Objects.equals(dataField, other.dataField) && Objects.equals(id_patient_data, other.id_patient_data)
-				&& Objects.equals(patients, other.patients);
+		return Objects.equals(id_patient_data, other.id_patient_data);
 	}
+
+	@Override
+	public String toString() {
+		return "PatientsDataDTO [id_patient_data=" + id_patient_data + ", getId_patient_data()=" + getId_patient_data()
+				+ ", hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
+
+	
+
+	
+
+	
 	
 	
 	

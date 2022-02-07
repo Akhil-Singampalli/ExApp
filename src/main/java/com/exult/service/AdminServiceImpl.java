@@ -156,54 +156,54 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public String patientTempEdit(PatientsDataDTO patientsDataTemp) throws ExappException {
-		
-		Iterable<Patients> patientAll = patRepo.findAll();
-		
-		List<DataFieldDTO> newdataFieldList = patientsDataTemp.getDataField();
-		
-												
-		for(Patients patient : patientAll) {
-
-			PatientsData patientsData = patient.getPatientsData();
-			
-					for(DataFieldDTO dataField : newdataFieldList) {
-						
-						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
-						
-						boolean olddataflag = optdataold.isPresent();
-						
-						
-				if(olddataflag) {	
-						
-						DataField dataold = optdataold.get();
-
-						dataold.setFieldId(dataold.getFieldId());
-						dataold.setFieldName(dataField.getFieldName());
-						dataold.setFieldType(dataField.getFieldType());
-						dataold.setFieldValue(dataold.getFieldValue());
-						
-						dataold.setPatientData(dataold.getPatientData());
-						
-						dataFieldRepo.save(dataold);
-	
-					}
-					else {
-						
-						DataField datanew = new DataField();
-							
-						datanew.setFieldName(dataField.getFieldName());
-						datanew.setFieldType(dataField.getFieldType());
-						datanew.setFieldValue(dataField.getFieldValue());
-						datanew.setPatientData(patientsData);
-						
-						dataFieldRepo.save(datanew);
-					}
-				patientDataRepo.save(patientsData);
-				}
-					
-				patRepo.save(patient);
-		}
-		
+//		
+//		Iterable<Patients> patientAll = patRepo.findAll();
+//		
+//		List<DataFieldDTO> newdataFieldList = dataFieldRepo.findByPatientData(patientsDataTemp) ;
+//		
+//												
+//		for(Patients patient : patientAll) {
+//
+//			PatientsData patientsData = patient.getPatientsData();
+//			
+//					for(DataFieldDTO dataField : newdataFieldList) {
+//						
+//						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
+//						
+//						boolean olddataflag = optdataold.isPresent();
+//						
+//						
+//				if(olddataflag) {	
+//						
+//						DataField dataold = optdataold.get();
+//
+//						dataold.setFieldId(dataold.getFieldId());
+//						dataold.setFieldName(dataField.getFieldName());
+//						dataold.setFieldType(dataField.getFieldType());
+//						dataold.setFieldValue(dataold.getFieldValue());
+//						
+//						dataold.setPatientData(dataold.getPatientData());
+//						
+//						dataFieldRepo.save(dataold);
+//	
+//					}
+//					else {
+//						
+//						DataField datanew = new DataField();
+//							
+//						datanew.setFieldName(dataField.getFieldName());
+//						datanew.setFieldType(dataField.getFieldType());
+//						datanew.setFieldValue(dataField.getFieldValue());
+//						datanew.setPatientData(patientsData);
+//						
+//						dataFieldRepo.save(datanew);
+//					}
+//				patientDataRepo.save(patientsData);
+//				}
+//					
+//				patRepo.save(patient);
+//		}
+//		
 		return null;
 	
 	}

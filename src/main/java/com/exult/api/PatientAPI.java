@@ -1,5 +1,7 @@
 package com.exult.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.exult.dto.PatientsDTO;
+import com.exult.entity.DataField;
 import com.exult.service.PatientsService;
 
 //@Validated
@@ -44,10 +47,10 @@ public class PatientAPI {
 	}
 	
 	@GetMapping(value = "/patientData/{patientId}")
-	public ResponseEntity<PatientsDTO> fetchPatientData(@PathVariable Integer patientId){
+	public ResponseEntity<List<DataField>> fetchPatientData(@PathVariable Integer patientId){
 		try {
-			PatientsDTO patient = patientsService.fetchPatientData(patientId);
-			return new ResponseEntity<PatientsDTO>(patient,HttpStatus.OK);
+			List<DataField> patient = patientsService.fetchPatientData(patientId);
+			return new ResponseEntity<List<DataField>>(patient,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}
