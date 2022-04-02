@@ -8,7 +8,7 @@ import com.exult.entity.Patients;
 
 public interface ExcelDataService {
 	
-	Integer saveExcelData(List<Patients> patients);
+	public Integer saveExcelData(List<Patients> patients);
 
-	List<PatientsDTO> getExcelDataAsList(InputStream inputStream);
+	 public List<PatientsDTO> getExcelDataAsList(InputStream inputStream);
 }

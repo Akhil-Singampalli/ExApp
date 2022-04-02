@@ -36,83 +36,77 @@ public class LoginServiceImpl implements LoginService{
 	public UserDTO authUser(String contactNumber, String password) throws ExappException {
 		
 		Optional<Patients> optPatients = patientRepo.findByContactNumber(contactNumber);
-		Patients patient = optPatients.orElseThrow(() -> new ExappException(""));
-		Doctors optDoctors = doctorRepo.findByContactNumber(contactNumber);
-		Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
+		System.out.println(optPatients);
 		
-		if(optPatients == null && optDoctors == null && optAdmin == null) {
-		throw new ExappException("PatientService.INVALID_CREDENTIALS");
-		}
+		Optional<Doctors> optDoctors = doctorRepo.findByContactNumber(contactNumber);
+		System.out.println(optDoctors);
 		
-		if(optPatients != null) {
+		Optional<Admin> optAdmin = adminRepo.findByContactNumber(contactNumber);
+		System.out.println(optAdmin);
+		
+		UserDTO userObj = new UserDTO();
+		
+		
+		if(optPatients.isPresent()) {
 			try {
+				Patients patient = optPatients.get();
 				String passwordFromDB = patient.getPassword();
 				if(password.equals(passwordFromDB)){
-					
-
-					UserDTO userObj = new UserDTO();
-			
+								
 					userObj.setContactNumber(patient.getContactNumber());
 					userObj.setEmailId(patient.getEmailId());
 					userObj.setUserId(patient.getIdPatient());
 					userObj.setUserName(patient.getPatientName());
 			
 					return userObj;
-				}else
-					throw new ExappException("PatientService.INVALID_CREDENTIALS");
+				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
 			
 		}
 		
-		if(optDoctors != null) {
+		if(optDoctors.isPresent()) {
 			try {
-				String passwordFromDB = optDoctors.getPassword();
+				Doctors doctor = optDoctors.get();
+				String passwordFromDB = doctor.getPassword();
+	
 				if(password.equals(passwordFromDB)){
 					
-
-					UserDTO userObj = new UserDTO();
 			
-					userObj.setContactNumber(optDoctors.getContactNumber());
-					userObj.setEmailId(optDoctors.getEmailId());
-					userObj.setUserId(optDoctors.getDoctorId());
-					userObj.setUserName(optDoctors.getDoctorName());
+					userObj.setContactNumber(doctor.getContactNumber());
+					userObj.setEmailId(doctor.getEmailId());
+					userObj.setUserId(doctor.getDoctorId());
+					userObj.setUserName(doctor.getDoctorName());
 			
-					return userObj;
-				}else
-					throw new ExappException("PatientService.INVALID_CREDENTIALS");
+				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
 			
 		}
 		
-		if(optAdmin != null) {
+		if(optAdmin.isPresent()) {
 			try {
-				String passwordFromDB = optAdmin.getPassword();
+				Admin admin = optAdmin.get();
+				String passwordFromDB = admin.getPassword();
 				if(password.equals(passwordFromDB)){
-					
-
-					UserDTO userObj = new UserDTO();
-			
-					userObj.setContactNumber(optAdmin.getContactNumber());
-					userObj.setEmailId(optAdmin.getEmailId());
-					userObj.setUserId(optAdmin.getAdminId());
-					userObj.setUserName(optAdmin.getAdminName());
-			
-					return userObj;
-				}else
-					throw new ExappException("PatientService.INVALID_CREDENTIALS");
+						
+					userObj.setContactNumber(admin.getContactNumber());
+					userObj.setEmailId(admin.getEmailId());
+					userObj.setUserId(admin.getAdminId());
+					userObj.setUserName(admin.getAdminName());
+	
+				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
-		} else {
-			throw new ExappException("PatientService.INVALID_CREDENTIALS");
-		}	
 		}
 		
+		return userObj;	
 	}
+		
+}
 	
 //	@Override
 //	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {

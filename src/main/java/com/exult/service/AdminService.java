@@ -15,5 +15,7 @@ public interface AdminService {
 	
 	public String registerAdmin(AdminDTO admin) throws ExappException;
 	public String addDoctor(DoctorsDTO doc) throws ExappException;
-	public String patientTempEdit(PatientsDataDTO patientsdata) throws ExappException;
+	public String patientTempEdit(List<DataFieldDTO> datafield) throws ExappException;
+
+	public List<DataFieldDTO> getPatientTempEdit() throws ExappException;
 }

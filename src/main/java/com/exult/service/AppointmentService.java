@@ -11,8 +11,15 @@ public interface AppointmentService {
 	
 	public AppointmentDTO confirmAppointment(Integer aptId) throws ExappException;
 	
-	public AppointmentDTO cancelAppointmentDTO(Integer aptId) throws ExappException;
+	public AppointmentDTO cancelAppointment(Integer aptId) throws ExappException;
+	
+	public AppointmentDTO editAppointment(Integer aptId,AppointmentDTO aptDTO) throws ExappException;
 	
 	public List<AppointmentDTO> viewAppointment(Integer appointmentDTO) throws ExappException;
+
+	public List<AppointmentDTO> viewAllAppointment()throws ExappException;
+
+	public AppointmentDTO fetchAppointment(Integer aptId) throws ExappException;
+	
 	
 }

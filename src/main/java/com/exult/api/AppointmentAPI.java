@@ -1,5 +1,7 @@
 package com.exult.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,56 @@ public class AppointmentAPI {
 		try {
 			appointmentService.confirmAppointment(aptId);
 			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/cancelApt/{aptId}",method = RequestMethod.POST)
+	public ResponseEntity<String> cancelAppointment(@PathVariable Integer aptId){
+		try {
+			appointmentService.cancelAppointment(aptId);
+			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/editApt/{aptId}",method = RequestMethod.POST)
+	public ResponseEntity<String> editAppointment(@PathVariable Integer aptId,@RequestBody AppointmentDTO aptUpdate){
+		try {
+			appointmentService.editAppointment(aptId, aptUpdate);
+			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/fetchApt/{aptId}",method = RequestMethod.GET)
+	public ResponseEntity<AppointmentDTO> editAppointment(@PathVariable Integer aptId){
+		try {
+			AppointmentDTO aptDTO =  appointmentService.fetchAppointment(aptId);
+			return new ResponseEntity<AppointmentDTO>(aptDTO,HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/getApt/{userId}",method = RequestMethod.GET)
+	public ResponseEntity<List<AppointmentDTO>> viewAppointments(@PathVariable Integer userId){
+		try {
+			List<AppointmentDTO> aptDTO = appointmentService.viewAppointment(userId);
+			return new ResponseEntity<List<AppointmentDTO>>(aptDTO,HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/getApts",method = RequestMethod.GET)
+	public ResponseEntity<List<AppointmentDTO>> viewAllAppointments(){
+		try {
+			List<AppointmentDTO> aptsDTO = appointmentService.viewAllAppointment();
+			return new ResponseEntity<List<AppointmentDTO>>(aptsDTO,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}

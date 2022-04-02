@@ -168,5 +168,26 @@ public class PatientsServiceImpl  implements PatientsService{
 		
 				
 	}
+
+	@Override
+	public PatientsDTO fetchPatient(Integer patientId) throws ExappException {
+		
+		Optional<Patients> patOptional = patientRepo.findById(patientId);
+		Patients patients = patOptional.orElseThrow(() -> new ExappException(""));
+		
+		if(patOptional != null) {
+			PatientsDTO patientsDTO = new PatientsDTO();
+			
+			patientsDTO.setContactNumber(patients.getContactNumber());
+			patientsDTO.setEmailId(patients.getEmailId());
+			patientsDTO.setPatientId(patientId);
+			patientsDTO.setPatientName(patients.getPatientName());
+			
+			return patientsDTO;
+		}else {
+			return null;
+		}
+		
+	}
 	
 }

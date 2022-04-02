@@ -37,10 +37,20 @@ public class DoctorsAPI {
 	private Environment environment;
 	
 	@GetMapping(value = "/details")
-	public ResponseEntity<List<Doctors>> doctorDetails(@RequestBody DoctorsDTO admin) {
+	public ResponseEntity<List<DoctorsDTO>> allDoctorDetails() {
 		try {
-			List<Doctors> docsFromDB =  doctorService.docDetails();
-			return new ResponseEntity<List<Doctors>>(docsFromDB, HttpStatus.OK);
+			List<DoctorsDTO> docsFromDB =  doctorService.docDetails();
+			return new ResponseEntity<List<DoctorsDTO>>(docsFromDB, HttpStatus.OK);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@GetMapping(value = "/doctor/{docId}")
+	public ResponseEntity<DoctorsDTO> fetchDoctor(@PathVariable Integer docId) {
+		try {
+			DoctorsDTO docsFromDB =  doctorService.getDoctor(docId);
+			return new ResponseEntity<DoctorsDTO>(docsFromDB, HttpStatus.OK);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, environment.getProperty(e.getMessage()));
 		}
@@ -56,10 +66,10 @@ public class DoctorsAPI {
 		}
 	}
 	
-	@PutMapping(value = "/detailsUpdate/{patientId}")
-	public ResponseEntity<String> updatePatient(@PathVariable Integer patientId,@RequestBody DataFieldDTO dataFieldDTO) {
+	@PutMapping(value = "/dataUpdate/{patientId}")
+	public ResponseEntity<String> updatePatientData(@PathVariable Integer patientId,@RequestBody List<DataFieldDTO> dataFieldDTOlist) {
 		try {
-			doctorService.updatePatientData(patientId,dataFieldDTO);
+			doctorService.updatePatientData(patientId,dataFieldDTOlist);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, environment.getProperty(e.getMessage()));

@@ -2,6 +2,7 @@ package com.exult.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 
 import com.exult.entity.Doctors;
 import com.exult.entity.Patients;
@@ -14,9 +15,9 @@ public class AppointmentDTO {
 	private String aptTime;
 	private String aptStatus;
 	
-	private Integer aptPatientId;
+	private String aptPatient;
 
-	private Integer aptDoctorId;
+	private String aptDoctor;
 
 	
 	public Integer getAptId() {
@@ -44,20 +45,22 @@ public class AppointmentDTO {
 	}
 
 
-	public Integer getAptPatientId() {
-		return aptPatientId;
+	
+
+	public String getAptPatient() {
+		return aptPatient;
 	}
 
-	public void setAptPatientId(Integer aptPatientId) {
-		this.aptPatientId = aptPatientId;
+	public void setAptPatient(String aptPatient) {
+		this.aptPatient = aptPatient;
 	}
 
-	public Integer getAptDoctorId() {
-		return aptDoctorId;
+	public String getAptDoctor() {
+		return aptDoctor;
 	}
 
-	public void setAptDoctorId(Integer aptDoctorId) {
-		this.aptDoctorId = aptDoctorId;
+	public void setAptDoctor(String aptDoctor) {
+		this.aptDoctor = aptDoctor;
 	}
 
 	public String getAptStatus() {

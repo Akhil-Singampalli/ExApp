@@ -50,7 +50,8 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public AdminDTO authenticateAdmin(String contactNumber, String password) throws ExappException {
 		
-		Admin optAdmin = adminRepo.findByContactNumber(contactNumber);
+		Optional<Admin> Admin = adminRepo.findByContactNumber(contactNumber);
+		Admin optAdmin = Admin.orElseThrow(() -> new ExappException(""));
 		
 		if(optAdmin == null) {
 			throw new ExappException("PatientService.INVALID_CREDENTIALS");
@@ -85,7 +86,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public String registerAdmin(AdminDTO admin) throws ExappException {
-		Admin optPatientC = adminRepo.findByContactNumber(admin.getContactNumber());
+		Optional<Admin> optPatientC = adminRepo.findByContactNumber(admin.getContactNumber());
 		Admin optPatientE = adminRepo.findByEmailId(admin.getEmailId());
 		
 		if(optPatientC != null || optPatientE != null) {
@@ -106,9 +107,11 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public String addDoctor(DoctorsDTO doc) throws ExappException {
-		Doctors optDocC = docRepo.findByContactNumber(doc.getContactNumber());
-		Doctors optDocE = docRepo.findByEmailId(doc.getEmailId());		
-		if(optDocC != null || optDocE != null) {
+		Optional<Doctors> optDocC = docRepo.findByContactNumber(doc.getContactNumber());
+		Optional<Doctors> optDocE = docRepo.findByEmailId(doc.getEmailId());		
+		System.out.println(optDocC);
+		System.out.println(optDocE);
+		if(optDocC.isPresent() && optDocE.isPresent()) {
 			throw new ExappException("");
 		}
 		else {
@@ -155,57 +158,83 @@ public class AdminServiceImpl implements AdminService {
 //	}
 
 	@Override
-	public String patientTempEdit(PatientsDataDTO patientsDataTemp) throws ExappException {
-//		
-//		Iterable<Patients> patientAll = patRepo.findAll();
-//		
-//		List<DataFieldDTO> newdataFieldList = dataFieldRepo.findByPatientData(patientsDataTemp) ;
-//		
-//												
-//		for(Patients patient : patientAll) {
-//
-//			PatientsData patientsData = patient.getPatientsData();
-//			
-//					for(DataFieldDTO dataField : newdataFieldList) {
-//						
-//						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
-//						
-//						boolean olddataflag = optdataold.isPresent();
-//						
-//						
-//				if(olddataflag) {	
-//						
-//						DataField dataold = optdataold.get();
-//
-//						dataold.setFieldId(dataold.getFieldId());
-//						dataold.setFieldName(dataField.getFieldName());
-//						dataold.setFieldType(dataField.getFieldType());
-//						dataold.setFieldValue(dataold.getFieldValue());
-//						
-//						dataold.setPatientData(dataold.getPatientData());
-//						
-//						dataFieldRepo.save(dataold);
-//	
-//					}
-//					else {
-//						
-//						DataField datanew = new DataField();
-//							
-//						datanew.setFieldName(dataField.getFieldName());
-//						datanew.setFieldType(dataField.getFieldType());
-//						datanew.setFieldValue(dataField.getFieldValue());
-//						datanew.setPatientData(patientsData);
-//						
-//						dataFieldRepo.save(datanew);
-//					}
-//				patientDataRepo.save(patientsData);
-//				}
-//					
-//				patRepo.save(patient);
-//		}
-//		
+	public String patientTempEdit(List<DataFieldDTO> newDatafields) throws ExappException {
+		
+		PatientsData patientsDatanew = new PatientsData();
+//		patientsDatanew.setId_patient_data(patientsDataTemp.getId_patient_data());
+		
+		Iterable<Patients> patientAll = patRepo.findAll();
+		
+//		List<DataFieldDTO> newdataFieldList = dataFieldRepo.findByPatientData(patientsDatanew) ;
+		
+		List<DataFieldDTO> newdataFieldList = newDatafields ;
+		
+												
+		for(Patients patient : patientAll) {
+
+			PatientsData patientsData = patient.getPatientsData();
+			
+					for(DataFieldDTO dataField : newdataFieldList) {
+						
+						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
+						
+						boolean olddataflag = optdataold.isPresent();
+						
+						
+				if(olddataflag) {	
+						
+						DataField dataold = optdataold.get();
+
+						dataold.setFieldId(dataold.getFieldId());
+						dataold.setFieldName(dataField.getFieldName());
+						dataold.setFieldType(dataField.getFieldType());
+						dataold.setFieldValue(dataold.getFieldValue());
+						
+						dataold.setPatientData(dataold.getPatientData());
+						
+						dataFieldRepo.save(dataold);
+	
+					}
+					else {
+						
+						DataField datanew = new DataField();
+							
+						datanew.setFieldName(dataField.getFieldName());
+						datanew.setFieldType(dataField.getFieldType());
+						datanew.setFieldValue(dataField.getFieldValue());
+						datanew.setPatientData(patientsData);
+						
+						dataFieldRepo.save(datanew);
+					}
+				patientDataRepo.save(patientsData);
+				}
+					
+				patRepo.save(patient);
+		}
+		
 		return null;
 	
+	}
+
+	@Override
+	public List<DataFieldDTO> getPatientTempEdit() throws ExappException {
+		List<DataField> dataFields = dataFieldRepo.findByPatientData(patientDataRepo.findById(137).get());
+		
+		List<DataFieldDTO> dataFieldDTOs = new ArrayList<DataFieldDTO>();
+		
+		for (DataField field : dataFields) {
+			DataFieldDTO dataFieldDTO = new DataFieldDTO();
+			
+			dataFieldDTO.setFieldId(field.getFieldId());
+			dataFieldDTO.setFieldName(field.getFieldName());
+			dataFieldDTO.setFieldType(field.getFieldType());
+			dataFieldDTO.setFieldValue(field.getFieldValue());
+			
+			dataFieldDTOs.add(dataFieldDTO);
+		}
+		
+		
+		return dataFieldDTOs;
 	}
 }
 
