@@ -35,6 +35,9 @@ public class PatientsServiceImpl  implements PatientsService{
 	
 	@Autowired
 	private EmailSenderService emailSenderService;
+	
+	@Autowired
+	private AdminService adminService;
 
 	@Override
 	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {
@@ -73,13 +76,18 @@ public class PatientsServiceImpl  implements PatientsService{
 	public String registerPatient(PatientsDTO patient) throws ExappException {
 		
 		
-//		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
-//		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
+		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+		List<DataFieldDTO> sampleDataFields = adminService.getPatientTempEdit();
 		
-		if(false) {
+		
+		if(optPatientC.isPresent() || optPatientE.isPresent()) {
+			
+			System.out.println("here");
 			throw new ExappException("PatientService.EXISTING_CONTACT_NUMBER");
 		}
 		else {
+			
 			Patients patientNew = new Patients();
 			
 			patientNew.setPatientName(patient.getPatientName());
@@ -92,17 +100,21 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			List<DataField> datafieldlist = new ArrayList<>();
 			
-			DataField dataField = new DataField();
-						
-			dataField.setFieldName("Name");
-			dataField.setFieldType("Type");
-			dataField.setFieldValue("Value");
 			
-			dataField.setPatientData(patientsData);
-			
-			dataFieldRepo.save(dataField);
-			
-			datafieldlist.add(dataField);
+			for(DataFieldDTO fieldDTO : sampleDataFields) {
+				
+				DataField dataField = new DataField();
+				
+				dataField.setFieldName(fieldDTO.getFieldName());
+				dataField.setFieldValue(fieldDTO.getFieldValue());
+				dataField.setFieldType(fieldDTO.getFieldType());
+				
+				dataField.setPatientData(patientsData);
+				
+				dataFieldRepo.save(dataField);
+				
+				datafieldlist.add(dataField);
+			}	
 			
 //			for(DataField field : patient.getPatientData().getDataField()) {
 //				
