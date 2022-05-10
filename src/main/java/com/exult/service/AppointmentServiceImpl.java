@@ -23,6 +23,9 @@ import com.exult.repository.AppointmentRepo;
 import com.exult.repository.DoctorRepo;
 import com.exult.repository.PatientRepo;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+
 @Service("AppointmentService")
 @Transactional
 public class AppointmentServiceImpl implements AppointmentService {
@@ -123,7 +126,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 		String patsubject = "Appointment Cancelled";
 		String body = "Hi "+ patient.getPatientName() +" Your appointment request for "+ appointment.getDoctorId() + " on " + appointment.getAptDate()+ " at "+ appointment.getAptTime() + " is Cancelled !!! ";
 		
-		emailSenderService.sendNotification(patient.getEmailId(), body, patsubject);
+//		emailSenderService.sendNotification(patient.getEmailId(), body, patsubject);
+		
 		return null;
 		
 	}

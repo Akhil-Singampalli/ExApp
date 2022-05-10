@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
-//@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.properties")
 @ConfigurationProperties
 public class OauthConfig {
 	@Value("${google.oauth.callback.uri}")

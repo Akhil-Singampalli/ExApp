@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exult.api.DriveAPI;
 import com.exult.dto.DataFieldDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
@@ -19,6 +20,9 @@ import com.exult.exception.ExappException;
 import com.exult.repository.DataFieldRepo;
 import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 
 @Service(value = "patientService")
 @Transactional
@@ -38,6 +42,9 @@ public class PatientsServiceImpl  implements PatientsService{
 	
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private DriveAPI driveAPI;
 
 	@Override
 	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {
@@ -116,25 +123,6 @@ public class PatientsServiceImpl  implements PatientsService{
 				datafieldlist.add(dataField);
 			}	
 			
-//			for(DataField field : patient.getPatientData().getDataField()) {
-//				
-//				DataField dataField = new DataField();
-//				
-//				
-//				dataField.setFieldName(field.getFieldName());
-//				dataField.setFieldType(field.getFieldType());
-//				dataField.setFieldValue(field.getFieldValue());
-//				
-//				dataField.setPatientData(patientsData);
-//				
-//				dataFieldRepo.save(dataField);
-//				
-//				datafieldlist.add(dataField);
-//			}
-
-//			patientsData.setDataField(datafieldlist);
-		
-			
 			
 			patientDataRepo.save(patientsData);
 			
@@ -142,8 +130,26 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			patientRepo.save(patientNew);
 			
+			try {
+				String DeskFolderId = driveAPI.CreateDeskFolder(patientNew.getIdPatient());
+				patientsData.setDesk_data_id(DeskFolderId);
+			} catch (Exception e) {
+			
+				e.printStackTrace();
+			}
+			
+			patientDataRepo.save(patientsData);
+			
+			
+			
 			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
 			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
+			
+			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")
+					  .header("authkey", "312379AYnyiHzkHSVm6161ac34P1")
+					  .header("content-type", "application/JSON")
+					  .body("{\n  \"flow_id\": \"61701531163abd49a820db42\",\n  \"sender\": \"exults\",\n  \"mobiles\": \"919515050278 \",\n  \"VAR1\": \"VALUE 1\",\n  \"VAR2\": \"VALUE 2\"\n}")
+					  .asString();
 		}
 		return "success";
 	}

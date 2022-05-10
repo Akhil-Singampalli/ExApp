@@ -23,6 +23,9 @@ import com.exult.dto.AppointmentDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.service.AppointmentService;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/aptAPI")
@@ -38,6 +41,15 @@ public class AppointmentAPI {
 	public ResponseEntity<String> bookAppointment(@RequestBody AppointmentDTO appointment){
 		try {
 			appointmentService.bookAppointment(appointment);
+			
+			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")
+					  .header("authkey", "312379AYnyiHzkHSVm6161ac34P1")
+					  .header("content-type", "application/JSON")
+					  .body("{\n  \"flow_id\": \"6170120fd0d1872f0d155e7a\",\n  \"sender\": \"exults\",\n  \"mobiles\": \"919515050278 \",\n  \"VAR1\": \"VALUE 1\",\n  \"VAR2\": \"VALUE 2\"\n}")
+					  .asString();
+			System.out.println(response);
+			
+			
 			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS1"+"aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
