@@ -23,6 +23,9 @@ import com.exult.repository.AppointmentRepo;
 import com.exult.repository.DoctorRepo;
 import com.exult.repository.PatientRepo;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+
 @Service("AppointmentService")
 @Transactional
 public class AppointmentServiceImpl implements AppointmentService {
@@ -32,7 +35,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	
 	@Autowired
 	private DoctorRepo doctorRepo;
-	
 	
 	@Autowired
 	private AdminRepo adminRepo;
@@ -47,31 +49,31 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public String bookAppointment(AppointmentDTO appointmentDTO) throws ExappException {
 		
-		
-		Optional<Patients> optPatient = patientRepo.findById(appointmentDTO.getAptPatientId());
+		Integer idP = Integer.parseInt(appointmentDTO.getAptPatient());
+		Optional<Patients> optPatient = patientRepo.findById(idP);
 		Patients patient = optPatient.orElseThrow(()-> new ExappException("AppointmentService.INVALID_PATIENT_DOCTOR"));
+		System.out.println(optPatient);
 		
-		
-		Optional<Doctors> optdoctor = doctorRepo.findById(appointmentDTO.getAptDoctorId());
+		Integer idD = Integer.parseInt(appointmentDTO.getAptDoctor());
+		Optional<Doctors> optdoctor = doctorRepo.findById(idD);
 		Doctors doctor = optdoctor.orElseThrow(()-> new ExappException(""));
+		System.out.println(optdoctor);
+
 		
-//		Optional<Admin> optAdmin = adminRepo.findById(1);
-//		Admin admin = optAdmin.orElseThrow(() -> new ExappException(""));
 		
-		
-		if(optPatient != null) {
+		if(optPatient.isPresent()) {
 			
 			Appointment newAppointment = new Appointment();
 			
 			newAppointment.setAptDate(appointmentDTO.getAptDate());
 			newAppointment.setAptTime(appointmentDTO.getAptTime());
 			newAppointment.setAptStatus("Pending");
-			newAppointment.setPatient(patient);
-			newAppointment.setDoctor(doctor);
-//			newAppointment.setAdmin(admin);
+			newAppointment.setDoctorId(doctor.getDoctorId());
+			newAppointment.setPatientId(patient.getIdPatient());
+			newAppointment.setAdminId(1);
 			
 
-			
+			System.out.println(newAppointment);
 			appointmentRepo.save(newAppointment);
 			
 			String patsubject = "Appointment Request";
@@ -96,33 +98,36 @@ public class AppointmentServiceImpl implements AppointmentService {
 		Optional<Appointment> optApt = appointmentRepo.findById(aptId);
 		Appointment appointment = optApt.orElseThrow(()->new ExappException(""));
 		
-		Optional<Patients> optPatient = patientRepo.findById(appointment.getPatient().getIdPatient());
+		Optional<Patients> optPatient = patientRepo.findById(appointment.getPatientId());
 		Patients patient = optPatient.orElseThrow(()-> new ExappException("AppointmentService.INVALID_PATIENT_DOCTOR"));
 		
 		appointment.setAptStatus("Confirm");
 		
 		String patsubject = "Appointment Confirmed";
-		String body = "Hi "+ patient.getPatientName() +" Your appointment request for "+ appointment.getDoctor().getDoctorName() + " on " + appointment.getAptDate()+ " at "+ appointment.getAptTime() + " is Confirmed !!! ";
+		String body = "Hi "+ patient.getPatientName() +" Your appointment request for "+ appointment.getDoctorId() + " on " + appointment.getAptDate()+ " at "+ appointment.getAptTime() + " is Confirmed !!! ";
 		
 		emailSenderService.sendNotification(patient.getEmailId(), body, patsubject);
 		return null;
 	}
 
 	@Override
-	public AppointmentDTO cancelAppointmentDTO(Integer aptId) throws ExappException {
+	public AppointmentDTO cancelAppointment(Integer aptId) throws ExappException {
 		
 		Optional<Appointment> optApt = appointmentRepo.findById(aptId);
 		Appointment appointment = optApt.orElseThrow(()->new ExappException(""));
 		
-		Optional<Patients> optPatient = patientRepo.findById(appointment.getPatient().getIdPatient());
+		Optional<Patients> optPatient = patientRepo.findById(appointment.getPatientId());
 		Patients patient = optPatient.orElseThrow(()-> new ExappException("AppointmentService.INVALID_PATIENT_DOCTOR"));
 		
 		appointment.setAptStatus("Cancelled");
 		
-		String patsubject = "Appointment Cancelled";
-		String body = "Hi "+ patient.getPatientName() +" Your appointment request for "+ appointment.getDoctor().getDoctorName() + " on " + appointment.getAptDate()+ " at "+ appointment.getAptTime() + " is Cancelled !!! ";
+		appointmentRepo.delete(appointment);
 		
-		emailSenderService.sendNotification(patient.getEmailId(), body, patsubject);
+		String patsubject = "Appointment Cancelled";
+		String body = "Hi "+ patient.getPatientName() +" Your appointment request for "+ appointment.getDoctorId() + " on " + appointment.getAptDate()+ " at "+ appointment.getAptTime() + " is Cancelled !!! ";
+		
+//		emailSenderService.sendNotification(patient.getEmailId(), body, patsubject);
+		
 		return null;
 		
 	}
@@ -130,19 +135,156 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public List<AppointmentDTO> viewAppointment(Integer userId) throws ExappException {
 		
-//		Optional<List<Appointment>> optAptP = appointmentRepo.findByPatient(userId);
-//		Optional<List<Appointment>> optAptD = appointmentRepo.findByDoctor(userId);
-//		List<Appointment> aptP = optAptP.orElseThrow(() -> new ExappException(""));
-//		List<Appointment> aptD = optAptD.orElseThrow(() -> new ExappException(""));
-//		
-//		if(optAptP == null && optAptD == null) {
-//			throw new ExappException("");
-//		}
-//		List<AppointmentDTO> aptList = new ArrayList<>();
-//		return aptList;
+		Optional<List<Appointment>> optAptP = appointmentRepo.findByPatientid(userId);
+		Optional<List<Appointment>> optAptD = appointmentRepo.findByDoctorid(userId);
+		System.out.println(optAptD);
 		
-		return null;
+		List<AppointmentDTO> aptList = new ArrayList<AppointmentDTO>();
+		
+		if(optAptP.isEmpty() && optAptD.isEmpty()) {
+			throw new ExappException("");
+		}
+		if(optAptD.isPresent()) {
+			
+			List<Appointment> aptD = optAptD.get();
+			
+			for(Appointment aptDoc : aptD ) {
+				
+				Optional<Patients> patient = patientRepo.findById(aptDoc.getPatientId());
+				Optional<Doctors> doctor = doctorRepo.findById(aptDoc.getDoctorId());
+				
+				AppointmentDTO appointmentDTO = new AppointmentDTO();
+				
+				appointmentDTO.setAptDate(aptDoc.getAptDate());
+				appointmentDTO.setAptTime(aptDoc.getAptTime());
+				appointmentDTO.setAptStatus(aptDoc.getAptStatus());
+				
+				
+				appointmentDTO.setAptPatient(patient.get().getPatientName());
+				appointmentDTO.setAptDoctor(doctor.get().getDoctorName());
+				appointmentDTO.setAptId(aptDoc.getAptId());
+				
+				aptList.add(appointmentDTO);
+			}
+			
+			
+		}
+		if(optAptP.isPresent()) {
+			List<Appointment> aptP = optAptP.get();
+			System.out.println(aptP);
+			
+			for(Appointment aptPat : aptP ) {
+				
+				Optional<Patients> patient = patientRepo.findById(aptPat.getPatientId());
+				Optional<Doctors> doctor = doctorRepo.findById(aptPat.getDoctorId());
+				
+				
+				AppointmentDTO appointmentDTO = new AppointmentDTO();
+				
+				appointmentDTO.setAptDate(aptPat.getAptDate());
+				appointmentDTO.setAptTime(aptPat.getAptTime());
+				appointmentDTO.setAptStatus(aptPat.getAptStatus());
+				appointmentDTO.setAptPatient(patient.get().getPatientName());
+				appointmentDTO.setAptDoctor(doctor.get().getDoctorName());
+				appointmentDTO.setAptId(aptPat.getAptId());
+				
+				System.out.println(appointmentDTO);
+				
+				aptList.add(appointmentDTO);
+			
+		}
+		
 		
 	}
-
+		return aptList;
 }
+
+	@Override
+	public List<AppointmentDTO> viewAllAppointment() throws ExappException {
+
+		Iterable<Appointment> aptAll = appointmentRepo.findAll();
+		
+		List<AppointmentDTO> aptAllList = new ArrayList<AppointmentDTO>();
+		
+		
+		
+		for(Appointment aptPat : aptAll ) {
+			
+			Optional<Patients> patient = patientRepo.findById(aptPat.getPatientId());
+			Optional<Doctors> doctor = doctorRepo.findById(aptPat.getDoctorId());
+			
+			
+			AppointmentDTO appointmentDTO = new AppointmentDTO();
+			
+			appointmentDTO.setAptDate(aptPat.getAptDate());
+			appointmentDTO.setAptTime(aptPat.getAptTime());
+			appointmentDTO.setAptStatus(aptPat.getAptStatus());
+			appointmentDTO.setAptPatient(patient.get().getPatientName());
+			appointmentDTO.setAptDoctor(doctor.get().getDoctorName());
+			appointmentDTO.setAptId(aptPat.getAptId());
+			
+			System.out.println(appointmentDTO);
+			
+			aptAllList.add(appointmentDTO);
+		
+		
+	}
+		return aptAllList;
+	}
+
+	@Override
+	public AppointmentDTO editAppointment(Integer aptId, AppointmentDTO aptDTO) throws ExappException {
+		
+		Optional<Appointment> optApt = appointmentRepo.findById(aptId);
+		Appointment appointment = optApt.orElseThrow(()->new ExappException(""));
+		
+		Integer idP = Integer.parseInt(aptDTO.getAptPatient());
+		Optional<Patients> optPatient = patientRepo.findById(idP);
+		Patients patient = optPatient.orElseThrow(()-> new ExappException("AppointmentService.INVALID_PATIENT_DOCTOR"));
+		System.out.println(optPatient);
+		
+		Integer idD = Integer.parseInt(aptDTO.getAptDoctor());
+		Optional<Doctors> optdoctor = doctorRepo.findById(idD);
+		Doctors doctor = optdoctor.orElseThrow(()-> new ExappException(""));
+		System.out.println(optdoctor);
+		
+		appointment.setAptDate(aptDTO.getAptDate());
+		appointment.setAptTime(aptDTO.getAptTime());
+		appointment.setDoctorId(Integer.parseInt(aptDTO.getAptDoctor()));
+//		appointment.setPatientId(Integer.parseInt(aptDTO.getAptPatient()));
+		
+		appointmentRepo.save(appointment);
+		
+		return null;
+	}
+
+	@Override
+	public AppointmentDTO fetchAppointment(Integer aptId) throws ExappException {
+		
+		Optional<Appointment> optApt = appointmentRepo.findById(aptId);
+		Appointment appointment = optApt.orElseThrow(()->new ExappException(""));
+		
+		
+		Optional<Patients> optPatient = patientRepo.findById(appointment.getPatientId());
+		Patients patient = optPatient.orElseThrow(()-> new ExappException("AppointmentService.INVALID_PATIENT_DOCTOR"));
+		System.out.println(optPatient);
+		
+		Optional<Doctors> optdoctor = doctorRepo.findById(appointment.getDoctorId());
+		Doctors doctor = optdoctor.orElseThrow(()-> new ExappException(""));
+		System.out.println(optdoctor);
+		
+		AppointmentDTO appointmentDTO = new AppointmentDTO();
+		
+		appointmentDTO.setAptDate(appointment.getAptDate());
+		appointmentDTO.setAptTime(appointment.getAptTime());
+		appointmentDTO.setAptStatus(appointment.getAptStatus());
+		appointmentDTO.setAptPatient(patient.getEmailId());
+		appointmentDTO.setAptDoctor(doctor.getEmailId());
+		appointmentDTO.setAptId(appointment.getAptId());
+		
+		return appointmentDTO;
+	}
+}
+
+
+

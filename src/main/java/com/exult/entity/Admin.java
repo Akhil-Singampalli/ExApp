@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,15 +19,13 @@ public class Admin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="idadmin")
 	private Integer adminId;
 	private String adminName;
 	private String emailId;
 	private String contactNumber;
 	private String password;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "idAdmin")
-	private List<Appointment> appointment;
 	
 	public Integer getAdminId() {
 		return adminId;

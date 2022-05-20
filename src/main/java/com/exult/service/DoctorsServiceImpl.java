@@ -1,5 +1,6 @@
 package com.exult.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.exult.dto.DataFieldDTO;
+import com.exult.dto.DoctorsDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.entity.DataField;
 import com.exult.entity.Doctors;
 import com.exult.entity.Patients;
 import com.exult.exception.ExappException;
+import com.exult.repository.DataFieldRepo;
 import com.exult.repository.DoctorRepo;
 import com.exult.repository.PatientRepo;
+import com.mysql.cj.result.Field;
 
 @Service(value = "doctorService")
 @Transactional
@@ -26,13 +30,36 @@ public class DoctorsServiceImpl implements DoctorsService {
 	
 	@Autowired
 	private PatientRepo patRepo;
+	
+	@Autowired
+	private DataFieldRepo dataFieldRepo;
 
 	@Override
-	public List<Doctors> docDetails() throws ExappException {
+	public List<DoctorsDTO> docDetails() throws ExappException {
 		
-		List<Doctors> docs = (List<Doctors>) doctorRepo.findAll();
+		Iterable<Doctors> docs = doctorRepo.findAll();
 		
-		return docs;
+		List<DoctorsDTO> docslist = new ArrayList<>();
+		
+		
+		
+		for(Doctors doctor : docs) {
+			
+			DoctorsDTO doctorsDTO = new DoctorsDTO();
+			
+			doctorsDTO.setContactNumber(doctor.getContactNumber());
+			doctorsDTO.setDoctorName(doctor.getDoctorName());
+			doctorsDTO.setEmailId(doctor.getEmailId());
+			doctorsDTO.setPassword(doctor.getPassword());
+			doctorsDTO.setDoctorId(doctor.getDoctorId());
+			
+		
+			docslist.add(doctorsDTO);
+	
+		}
+	
+		
+		return docslist;
 	}
 
 	@Override
@@ -43,17 +70,22 @@ public class DoctorsServiceImpl implements DoctorsService {
 	}
 
 	@Override
-	public String updatePatientData(Integer patientId,DataFieldDTO dataFieldDTO) throws ExappException {
+	public String updatePatientData(Integer patientId,List<DataFieldDTO> dataFieldDTOlist) throws ExappException {
 		Optional<Patients> optpat = patRepo.findById(patientId);
 		Patients patient = optpat.orElseThrow(() -> new ExappException(""));
 		
+		List<DataField> dataField = dataFieldRepo.findByPatientData(patient.getPatientsData());
+		
 		if(patient != null ) {
-			DataField dataField = new DataField();
-					
-			
-			patRepo.save(patient);
+			for(DataFieldDTO fieldDTO : dataFieldDTOlist) {
+				DataField field = dataFieldRepo.findById(fieldDTO.getFieldId()).get();
+				
+				field.setFieldValue(fieldDTO.getFieldValue());
+				
+				dataFieldRepo.save(field);
+			}		
 		}
-		return null;
+		return "Patient Data Updated Successfully";
 	}
 
 	@Override
@@ -62,6 +94,23 @@ public class DoctorsServiceImpl implements DoctorsService {
 		List<Patients> pats = (List<Patients>) patRepo.findAll();
 		
 		return pats;
+	}
+
+	@Override
+	public DoctorsDTO getDoctor(Integer docId) throws ExappException {
+		
+		Optional<Doctors> optDoc = doctorRepo.findById(docId);
+		
+		Doctors doc = optDoc.orElseThrow(() -> new ExappException(null));
+		
+		DoctorsDTO doctorsDTO =new DoctorsDTO();
+		
+		doctorsDTO.setContactNumber(doc.getContactNumber());
+		doctorsDTO.setDoctorName(doc.getDoctorName());
+		doctorsDTO.setEmailId(doc.getEmailId());
+		doctorsDTO.setDoctorId(doc.getDoctorId());
+		
+		return doctorsDTO;
 	}
 
 }

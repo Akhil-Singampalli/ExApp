@@ -28,11 +28,7 @@ public class Doctors {
 	@Column(name = "contactnumber")
 	private String contactNumber;
 	private String password;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "idDoctor")
-	private List<Appointment> appointment;
-	
+		
 	
 	public Integer getDoctorId() {
 		return IdDoctor;

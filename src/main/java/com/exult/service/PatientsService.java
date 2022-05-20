@@ -15,4 +15,6 @@ public interface PatientsService {
 	public String registerPatient(PatientsDTO patient) throws ExappException;
 	
 	public List<DataField> fetchPatientData(Integer patientId) throws ExappException;
+
+	public PatientsDTO fetchPatient(Integer patientId) throws ExappException;
 }

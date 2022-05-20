@@ -77,15 +77,54 @@
 			<version>4.1.2</version>
     	
 		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-drive</artifactId>
+			<version>v3-rev20200609-1.30.9</version>
+		</dependency>
+<dependency>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.25.0</version>
+</dependency>
+
+<dependency>
+  <groupId>com.google.oauth-client</groupId>
+  <artifactId>google-oauth-client-jetty</artifactId>
+  <version>1.31.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sqladmin -->
+<dependency>
+    <groupId>com.google.apis</groupId>
+    <artifactId>google-api-services-sqladmin</artifactId>
+    <version>v1-rev20220323-1.32.1</version>
+</dependency>
+
+<dependency>
+    <groupId>com.google.http-client</groupId>
+    <artifactId>google-http-client</artifactId>
+    <version>1.16.0-rc</version>
+</dependency>
+		<dependency>
+			<groupId>com.konghq</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>3.13.6</version>
+		</dependency>
+
+
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-gcp-dependencies</artifactId>
+				<version>1.1.2.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 </project>

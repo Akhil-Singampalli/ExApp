@@ -23,7 +23,6 @@ public class PatientsDTO {
 	
 	private String password;
 	
-	private List<Appointment> appointments;
 	
 	private PatientsDataDTO patientData;
 	
@@ -67,14 +66,6 @@ public class PatientsDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public List<Appointment> getAppointments() {
-		return appointments;
-	}
-
-	public void setAppointments(List<Appointment> appointments) {
-		this.appointments = appointments;
 	}
 
 	public PatientsDataDTO getPatientData() {

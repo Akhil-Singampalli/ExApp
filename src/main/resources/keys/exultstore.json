@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "exultstore",
+  "private_key_id": "e98962fd6ed41b1e3e20c8ffcb538655a2afcf5f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIKTS7PNg+kDHt\nFawoL9ocnH88l7D80OufrSewkaMOS15em0RtjXgTMVyu4BUEq7Fzv47OgVK5J1X/\nqkCufLDUroS/Kegd11/FMMGmXsb3q4rP0YV4T/19z+rLopQi/ABNVMFqPYxW4mUE\nYPd7VEDM1MTbq8CmyZmDBcD/BgQKq5C5gQTQlwyJ/iLJz+Csk6nDfCa7piA2pcDP\nnsjbs3jOfwSQiVev32XXZmGdlxCa5eFZK3qZASn3wUSDrNHfiJMBfQVonyg9c8HF\nmS2wyeQ7rMTIuzS27ZPQGYUNrHQ2kusIz/rLEixPYiDPxVhWyo5O8tw/CCsUvhAQ\njzzIcWmXAgMBAAECggEABVMvT3HhcNymL1/9uf335/3z1plUgI1QT2msXiKpu1Ye\n9xZbXiy+zofoJtDYTk0BBgrJEk5XdIyK2afeW6X+kFHqPymuvqh9qEHRTQtFcM5T\n/Y5d5iL+o+u1m+BB36JjoasJEDn980vHkzO/Mb0+khRw/kUV9Xn0hwtOpJo03lHB\nFwqwlP1q8RLF2KmQfC1/RojXzmaeij+C/2RSGOmjUmRPEEdK5CfwoHfa9/Vfa+Nz\nKY0sF5P/ui+5P+IayieQx1mX+pfUTJEzqerqqrgtOMKD0Gwo/JYorKaVGwhj3rSD\nSE4tGx/0XE6ObkB6A4RfVWQ/whXXypbNG/XeFsYxpQKBgQDjGVrTbzyD4dEOXK+i\n50cFe7WWC0K8DIKEw6KH8L6vQEq6iQSMJiuPuiYc5sN1DeeFFfj0wxp3bXouwvKU\n1a5OrW92vnMsxgjz78/KtXV6TCqTE9E6j5U6J5s8VP/RrjEYL45B7vaqJstPG4UL\nVwE2opNVAFzHFYTw7S3gf9WKAwKBgQDhojy2mmXGxI5wyuQE1o39CPzqg4rS99cj\n1Xbb7+n1967mUXgkhmxvWJLL+RIaFK82A0bWe4NlDz2M4/0FbMO89mS6BqFQ7/ck\nAeXJOsijpkdN1YOmNBkZ41W4lvotDcueBCMxuyKO98et1QIULSyMfmckO0cMt0Mm\ng8dBBpEX3QKBgDWOAiRAZDX5p9JKO0UgY1hArzbeGvO7w3/JnueN93neoIDS1Raz\n3av8SwafyNIu4D07TEV0SSaG07x5TrmYlo2JSvLmwMR7Qxs7n3X/St/3XEbo8ntr\n5tYbBvm4Vce922gHtvWHg/XmRiW2qK5e6zNWLYZrGnX8dihW1m3N166/AoGBALMk\nPTH5me7bZgA1hh41Ptx0g2GqeNERR3XC6LCsZcQNF4bzjgDp3TP2Te62XOHqJEYt\nCdQGkobtN8Ahz2S8OxhPRB/SXcfGDiE/hHJlQqFzxk8Mw4509KzyKr/41r5ooo5d\n2JeGbWS3Y4kngpQEXcdaIIfKrJly81Sj8dI15YLdAoGAGKrLDiXcaudHJRRBsX98\nyJQ8ZS6VFxK5nopNrjVGEXJgQ6y+oaIEW1C79Z9MBYABY+mAkC0uLRkrAJp74XPv\ncCkeTpBMvh2b4GADfM7gP7VUKhABoG/Q0qKxYK6s9Dq+mRg8mboUaAXdpxuI6X1e\nW1p3FCwLLQA53oeEQtU7/D0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "drive-service@exultstore.iam.gserviceaccount.com",
+  "client_id": "104908327553455345377",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drive-service%40exultstore.iam.gserviceaccount.com"
+}

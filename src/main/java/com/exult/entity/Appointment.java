@@ -1,7 +1,7 @@
 package com.exult.entity;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +20,7 @@ public class Appointment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="idAppointment")
+	@Column(name="idappointment")
 	private Integer aptId;
 	@Column(name = "aptdate")
 	private String aptDate;
@@ -30,28 +29,15 @@ public class Appointment {
 	@Column(name= "aptstatus")
 	private String aptStatus;
 	
+	@Column(name="patientid")
+	private Integer PatientId;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name="patientsIdpatient")
-	private Patients Patient;
+	@Column(name="doctorid")
+	private Integer DoctorId;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name="doctorIddoctor")
-	private Doctors Doctor;
+	@Column(name = "adminid")
+	private Integer adminId;
 	
-//	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-//	@JoinColumn(name="adminIdadmin")
-//	private Admin Admin;
-	
-//	@OneToMany(cascade=CascadeType.ALL)
-//	@JoinColumn(name="id_patient")
-//	private Patients aptPatient;
-//	@OneToMany(cascade=CascadeType.ALL)
-//	@JoinColumn(name="id_doctor")
-//	private Doctors aptDoctor;
-//	@OneToMany(cascade=CascadeType.ALL)
-//	@JoinColumn(name="id_admin")
-//	private Admin aptAdmin;
 	
 	public Integer getAptId() {
 		return aptId;
@@ -79,33 +65,51 @@ public class Appointment {
 	public void setAptStatus(String aptStatus) {
 		this.aptStatus = aptStatus;
 	}
-	public Patients getPatient() {
-		return Patient;
+	public Integer getPatientId() {
+		return PatientId;
 	}
-	public void setPatient(Patients patient) {
-		Patient = patient;
+	public void setPatientId(Integer patientId) {
+		this.PatientId = patientId;
 	}
-	public Doctors getDoctor() {
-		return Doctor;
+	public Integer getDoctorId() {
+		return DoctorId;
 	}
-	public void setDoctor(Doctors doctor) {
-		Doctor = doctor;
+	public void setDoctorId(Integer doctorId) {
+		this.DoctorId = doctorId;
 	}
-//	public Admin getAdmin() {
-//		return Admin;
-//	}
-//	public void setAdmin(Admin admin) {
-//		Admin = admin;
-//	}
+		
+	public Integer getAdminId() {
+		return adminId;
+	}
+	public void setAdminId(Integer adminId) {
+		this.adminId = adminId;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(DoctorId, PatientId, aptDate, aptId, aptStatus, aptTime);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Appointment other = (Appointment) obj;
+		return Objects.equals(DoctorId, other.DoctorId) && Objects.equals(PatientId, other.PatientId)
+				&& Objects.equals(aptDate, other.aptDate) && Objects.equals(aptId, other.aptId)
+				&& Objects.equals(aptStatus, other.aptStatus) && Objects.equals(aptTime, other.aptTime);
+	}
+	@Override
+	public String toString() {
+		return "Appointment [aptId=" + aptId + ", aptDate=" + aptDate + ", aptTime=" + aptTime + ", aptStatus="
+				+ aptStatus + ", PatientId=" + PatientId + ", DoctorId=" + DoctorId + "]";
+	}
 	
 	
 	
-//	public Admin getAptAdmin() {
-//		return aptAdmin;
-//	}
-//	public void setAptAdmin(Admin aptAdmin) {
-//		this.aptAdmin = aptAdmin;
-//	}
+
 	
 	
 	

@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exult.api.DriveAPI;
 import com.exult.dto.DataFieldDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
@@ -19,6 +20,9 @@ import com.exult.exception.ExappException;
 import com.exult.repository.DataFieldRepo;
 import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 
 @Service(value = "patientService")
 @Transactional
@@ -35,6 +39,12 @@ public class PatientsServiceImpl  implements PatientsService{
 	
 	@Autowired
 	private EmailSenderService emailSenderService;
+	
+	@Autowired
+	private AdminService adminService;
+	
+	@Autowired
+	private DriveAPI driveAPI;
 
 	@Override
 	public PatientsDTO authenticatePatient(String contactNumber, String password) throws ExappException {
@@ -73,13 +83,18 @@ public class PatientsServiceImpl  implements PatientsService{
 	public String registerPatient(PatientsDTO patient) throws ExappException {
 		
 		
-//		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
-//		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
+		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
+		List<DataFieldDTO> sampleDataFields = adminService.getPatientTempEdit();
 		
-		if(false) {
+		
+		if(optPatientC.isPresent() || optPatientE.isPresent()) {
+			
+			System.out.println("here");
 			throw new ExappException("PatientService.EXISTING_CONTACT_NUMBER");
 		}
 		else {
+			
 			Patients patientNew = new Patients();
 			
 			patientNew.setPatientName(patient.getPatientName());
@@ -92,36 +107,21 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			List<DataField> datafieldlist = new ArrayList<>();
 			
-			DataField dataField = new DataField();
-						
-			dataField.setFieldName("Name");
-			dataField.setFieldType("Type");
-			dataField.setFieldValue("Value");
 			
-			dataField.setPatientData(patientsData);
-			
-			dataFieldRepo.save(dataField);
-			
-			datafieldlist.add(dataField);
-			
-//			for(DataField field : patient.getPatientData().getDataField()) {
-//				
-//				DataField dataField = new DataField();
-//				
-//				
-//				dataField.setFieldName(field.getFieldName());
-//				dataField.setFieldType(field.getFieldType());
-//				dataField.setFieldValue(field.getFieldValue());
-//				
-//				dataField.setPatientData(patientsData);
-//				
-//				dataFieldRepo.save(dataField);
-//				
-//				datafieldlist.add(dataField);
-//			}
-
-//			patientsData.setDataField(datafieldlist);
-		
+			for(DataFieldDTO fieldDTO : sampleDataFields) {
+				
+				DataField dataField = new DataField();
+				
+				dataField.setFieldName(fieldDTO.getFieldName());
+				dataField.setFieldValue(fieldDTO.getFieldValue());
+				dataField.setFieldType(fieldDTO.getFieldType());
+				
+				dataField.setPatientData(patientsData);
+				
+				dataFieldRepo.save(dataField);
+				
+				datafieldlist.add(dataField);
+			}	
 			
 			
 			patientDataRepo.save(patientsData);
@@ -130,8 +130,26 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			patientRepo.save(patientNew);
 			
+			try {
+				String DeskFolderId = driveAPI.CreateDeskFolder(patientNew.getIdPatient());
+				patientsData.setDesk_data_id(DeskFolderId);
+			} catch (Exception e) {
+			
+				e.printStackTrace();
+			}
+			
+			patientDataRepo.save(patientsData);
+			
+			
+			
 			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
 			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
+			
+			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")
+					  .header("authkey", "312379AYnyiHzkHSVm6161ac34P1")
+					  .header("content-type", "application/JSON")
+					  .body("{\n  \"flow_id\": \"61701531163abd49a820db42\",\n  \"sender\": \"exults\",\n  \"mobiles\": \"919515050278 \",\n  \"VAR1\": \"VALUE 1\",\n  \"VAR2\": \"VALUE 2\"\n}")
+					  .asString();
 		}
 		return "success";
 	}
@@ -167,6 +185,27 @@ public class PatientsServiceImpl  implements PatientsService{
 		
 		
 				
+	}
+
+	@Override
+	public PatientsDTO fetchPatient(Integer patientId) throws ExappException {
+		
+		Optional<Patients> patOptional = patientRepo.findById(patientId);
+		Patients patients = patOptional.orElseThrow(() -> new ExappException(""));
+		
+		if(patOptional != null) {
+			PatientsDTO patientsDTO = new PatientsDTO();
+			
+			patientsDTO.setContactNumber(patients.getContactNumber());
+			patientsDTO.setEmailId(patients.getEmailId());
+			patientsDTO.setPatientId(patientId);
+			patientsDTO.setPatientName(patients.getPatientName());
+			
+			return patientsDTO;
+		}else {
+			return null;
+		}
+		
 	}
 	
 }

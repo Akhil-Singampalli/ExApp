@@ -14,12 +14,35 @@ public class PatientsDataDTO {
 	
 	private Integer id_patient_data;
 	
+	private String desk_data_Id;
+	
+	private String doc_data_Id;
+	
+	
+	
 	public Integer getId_patient_data() {
 		return id_patient_data;
 	}
 
 	public void setId_patient_data(Integer id_patient_data) {
 		this.id_patient_data = id_patient_data;
+	}
+
+	
+	public String getDesk_data_Id() {
+		return desk_data_Id;
+	}
+
+	public void setDesk_data_Id(String desk_data_Id) {
+		this.desk_data_Id = desk_data_Id;
+	}
+
+	public String getDoc_data_Id() {
+		return doc_data_Id;
+	}
+
+	public void setDoc_data_Id(String doc_data_Id) {
+		this.doc_data_Id = doc_data_Id;
 	}
 
 	@Override
