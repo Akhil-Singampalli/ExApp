@@ -110,6 +110,11 @@
 			<artifactId>unirest-java</artifactId>
 			<version>3.13.6</version>
 		</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
+</dependency>
+
 
 
 	</dependencies>
