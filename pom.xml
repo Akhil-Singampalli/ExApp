@@ -55,11 +55,7 @@
 		</dependency>
 		
 		
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			
-		</dependency>
+		
 		<dependency>
 			<groupId>org.unitils</groupId>
 			<artifactId>unitils-core</artifactId>
@@ -85,7 +81,7 @@
 <dependency>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client</artifactId>
-    <version>1.25.0</version>
+    <version>1.31.1</version>
 </dependency>
 
 <dependency>
@@ -103,7 +99,7 @@
 <dependency>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client</artifactId>
-    <version>1.16.0-rc</version>
+    <version>1.41.7</version>
 </dependency>
 		<dependency>
 			<groupId>com.konghq</groupId>
