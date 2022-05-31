@@ -15,6 +15,10 @@ public interface DataFieldRepo extends CrudRepository<DataField, Integer >{
 
 	Optional<DataField> findByFieldName(String fieldName);
 
+	Optional<DataField> findByFieldName(Integer fieldId);
+
+	
+
 	
 
 }

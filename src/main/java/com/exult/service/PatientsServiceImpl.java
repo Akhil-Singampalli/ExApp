@@ -130,17 +130,9 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			patientRepo.save(patientNew);
 			
-			try {
-				String DeskFolderId = driveAPI.CreateDeskFolder(patientNew.getIdPatient());
-				patientsData.setDesk_data_id(DeskFolderId);
-			} catch (Exception e) {
 			
-				e.printStackTrace();
-			}
-			
-			patientDataRepo.save(patientsData);
-			
-			
+			driveAPI.CreateDeskFolder(patientNew.getIdPatient());
+				
 			
 			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
 			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
@@ -163,7 +155,7 @@ public class PatientsServiceImpl  implements PatientsService{
 		
 		List<DataField> dataFields = dataFieldRepo.findByPatientData(patient.getPatientsData());
 		
-//		
+		
 //		if(dataFieldDTOs != null && patient != null) {
 //			
 //			PatientsDTO patientDTO = new PatientsDTO();
@@ -178,10 +170,43 @@ public class PatientsServiceImpl  implements PatientsService{
 //			
 //			
 //			patientDTO.setPatientDataDTO(patientsDataDTO);
-//			
+			
 			
 			
 			return dataFields;
+		
+		
+				
+	}
+	
+	@Override
+	public PatientsData fetchPatientFoldders(Integer patientId) throws ExappException {
+		
+		
+		Optional<Patients> optPat = patientRepo.findById(patientId);
+		Patients patient = optPat.orElseThrow(()-> new ExappException(""));
+		
+		PatientsData patFolders = patient.getPatientsData();
+		
+		
+//		if(dataFieldDTOs != null && patient != null) {
+//			
+//			PatientsDTO patientDTO = new PatientsDTO();
+//			patientDTO.setPatientName(patient.getPatientName());
+//			patientDTO.setEmailId(patient.getEmailId());
+//			patientDTO.setContactNumber(patient.getContactNumber());
+//			
+//			
+//			PatientsDataDTO patientsDataDTO = new PatientsDataDTO();
+//			patientsDataDTO.setId_patient_data(patient.getPatientsData().getId_patient_data());
+//			
+//			
+//			
+//			patientDTO.setPatientDataDTO(patientsDataDTO);
+			
+			
+			
+			return patFolders;
 		
 		
 				

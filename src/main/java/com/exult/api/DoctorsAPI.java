@@ -57,10 +57,10 @@ public class DoctorsAPI {
 	}
 	
 	@GetMapping(value = "/patdata/{doctorId}")
-	public ResponseEntity<List<Patients>> patientsData(@PathVariable Integer doctorId) {
+	public ResponseEntity<List<PatientsDTO>> patientsData(@PathVariable Integer doctorId) {
 		try {
-			List<Patients> patsFromDB =  doctorService.PatientsData(doctorId);
-			return new ResponseEntity<List<Patients>>(patsFromDB, HttpStatus.OK);
+			List<PatientsDTO> patsFromDB =  doctorService.PatientsData(doctorId);
+			return new ResponseEntity<List<PatientsDTO>>(patsFromDB, HttpStatus.OK);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, environment.getProperty(e.getMessage()));
 		}

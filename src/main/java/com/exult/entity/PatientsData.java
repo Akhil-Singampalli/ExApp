@@ -28,6 +28,15 @@ public class PatientsData {
 	@Column(name = "deskDataId")
 	private String desk_data_id;
 	
+	@Column(name = "imgDataId")
+	private String img_data_id;
+	
+	@Column(name = "presDataId")
+	private String pres_data_id;
+	
+	@Column(name = "billsDataId")
+	private String bills_data_id;
+	
 	@Column(name = "docDataId")
 	private String doc_data_id;
 //	
@@ -69,6 +78,36 @@ public class PatientsData {
 
 	public void setDoc_data_id(String doc_data_id) {
 		this.doc_data_id = doc_data_id;
+	}
+
+
+	public String getImg_data_id() {
+		return img_data_id;
+	}
+
+
+	public void setImg_data_id(String img_data_id) {
+		this.img_data_id = img_data_id;
+	}
+
+
+	public String getPres_data_id() {
+		return pres_data_id;
+	}
+
+
+	public void setPres_data_id(String pres_data_id) {
+		this.pres_data_id = pres_data_id;
+	}
+
+
+	public String getBills_data_id() {
+		return bills_data_id;
+	}
+
+
+	public void setBills_data_id(String bills_data_id) {
+		this.bills_data_id = bills_data_id;
 	}
 
 	

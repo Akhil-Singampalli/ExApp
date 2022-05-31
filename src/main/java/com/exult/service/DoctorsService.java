@@ -17,7 +17,7 @@ public interface DoctorsService {
 	
 	public String updatePatientData(Integer patientId,List<DataFieldDTO> dataFieldDTO)throws ExappException;
 	
-	public List<Patients> PatientsData(Integer doctorId)throws ExappException;
+	public List<PatientsDTO> PatientsData(Integer doctorId)throws ExappException;
 
 	public DoctorsDTO getDoctor(Integer docId)throws ExappException;
 }

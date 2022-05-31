@@ -89,11 +89,26 @@ public class DoctorsServiceImpl implements DoctorsService {
 	}
 
 	@Override
-	public List<Patients> PatientsData(Integer doctorId) throws ExappException {
+	public List<PatientsDTO> PatientsData(Integer doctorId) throws ExappException {
 		
-		List<Patients> pats = (List<Patients>) patRepo.findAll();
+		Iterable<Patients> pats =  patRepo.findAll();
 		
-		return pats;
+		List<PatientsDTO> allpats = new ArrayList<PatientsDTO>();
+		
+		for (Patients pat : pats) {
+			PatientsDTO patDTO = new PatientsDTO();
+			patDTO.setContactNumber(pat.getContactNumber());
+			patDTO.setEmailId(pat.getEmailId());
+			patDTO.setPassword(pat.getPassword());
+			patDTO.setPatientName(pat.getPatientName());
+			patDTO.setPatientId(pat.getIdPatient());
+			
+			allpats.add(patDTO);
+		}
+		
+//		System.out.println(pats.toString());
+		
+		return allpats;
 	}
 
 	@Override

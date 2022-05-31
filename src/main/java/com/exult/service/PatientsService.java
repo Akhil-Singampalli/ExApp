@@ -6,6 +6,7 @@ import com.exult.dto.DataFieldDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
 import com.exult.entity.DataField;
+import com.exult.entity.PatientsData;
 import com.exult.exception.ExappException;
 
 public interface PatientsService {
@@ -17,4 +18,6 @@ public interface PatientsService {
 	public List<DataField> fetchPatientData(Integer patientId) throws ExappException;
 
 	public PatientsDTO fetchPatient(Integer patientId) throws ExappException;
+
+	public PatientsData fetchPatientFoldders(Integer patientId) throws ExappException;
 }

@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.exult.dto.PatientsDTO;
 import com.exult.entity.DataField;
 import com.exult.entity.Patients;
+import com.exult.entity.PatientsData;
 import com.exult.service.PatientsService;
 
 //@Validated
@@ -53,6 +54,16 @@ public class PatientAPI {
 		try {
 			List<DataField> patient = patientsService.fetchPatientData(patientId);
 			return new ResponseEntity<List<DataField>>(patient,HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@GetMapping(value = "/patientFolders/{patientId}")
+	public ResponseEntity<PatientsData> fetchPatientFolders(@PathVariable Integer patientId){
+		try {
+			PatientsData patient = patientsService.fetchPatientFoldders(patientId);
+			return new ResponseEntity<PatientsData>(patient,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}

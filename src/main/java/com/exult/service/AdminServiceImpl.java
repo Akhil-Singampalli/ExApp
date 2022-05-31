@@ -27,6 +27,7 @@ import com.exult.repository.DataFieldRepo;
 import com.exult.repository.DoctorRepo;
 import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
+import com.google.common.collect.Iterables;
 
 @Service(value = "adminService")
 @Transactional
@@ -160,14 +161,35 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public String patientTempEdit(List<DataFieldDTO> newDatafields) throws ExappException {
 		
-		PatientsData patientsDatanew = new PatientsData();
-//		patientsDatanew.setId_patient_data(patientsDataTemp.getId_patient_data());
 		
 		Iterable<Patients> patientAll = patRepo.findAll();
 		
-//		List<DataFieldDTO> newdataFieldList = dataFieldRepo.findByPatientData(patientsDatanew) ;
-		
+		List<DataFieldDTO> sampleDataFields = getPatientTempEdit();
 		List<DataFieldDTO> newdataFieldList = newDatafields ;
+		
+		for(Patients patient : patientAll) {
+
+			PatientsData patientsData = patient.getPatientsData();
+			
+					for(DataFieldDTO dataField : newdataFieldList) {
+						
+						if(!sampleDataFields.contains(dataField)) {
+							System.out.println(dataField.getFieldName());
+							
+							Optional<DataField> optdataold = dataFieldRepo.findByFieldName(dataField.getFieldName());
+							
+							DataField dataold = optdataold.get();
+							
+							dataFieldRepo.delete(dataold);
+						}
+						
+						
+				patientDataRepo.save(patientsData);
+				}
+					
+				patRepo.save(patient);
+		}
+		
 		
 												
 		for(Patients patient : patientAll) {
@@ -176,7 +198,7 @@ public class AdminServiceImpl implements AdminService {
 			
 					for(DataFieldDTO dataField : newdataFieldList) {
 						
-						Optional<DataField> optdataold = dataFieldRepo.findById(dataField.getFieldId());
+						Optional<DataField> optdataold = dataFieldRepo.findByFieldName(dataField.getFieldName());
 						
 						boolean olddataflag = optdataold.isPresent();
 						
@@ -184,6 +206,7 @@ public class AdminServiceImpl implements AdminService {
 				if(olddataflag) {	
 						
 						DataField dataold = optdataold.get();
+						System.out.println(dataold.getFieldName());
 
 						dataold.setFieldId(dataold.getFieldId());
 						dataold.setFieldName(dataField.getFieldName());
@@ -195,7 +218,7 @@ public class AdminServiceImpl implements AdminService {
 						dataFieldRepo.save(dataold);
 	
 					}
-					else {
+					else{
 						
 						DataField datanew = new DataField();
 							
@@ -218,7 +241,10 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<DataFieldDTO> getPatientTempEdit() throws ExappException {
-		List<DataField> dataFields = dataFieldRepo.findByPatientData(patientDataRepo.findById(137).get());
+		Iterable<PatientsData> patdatas = patientDataRepo.findAll(); 
+		
+		
+		List<DataField> dataFields = dataFieldRepo.findByPatientData(patdatas.iterator().next());
 		
 		List<DataFieldDTO> dataFieldDTOs = new ArrayList<DataFieldDTO>();
 		

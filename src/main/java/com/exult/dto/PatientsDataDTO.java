@@ -18,6 +18,12 @@ public class PatientsDataDTO {
 	
 	private String doc_data_Id;
 	
+	private String img_data_Id;
+	
+	private String pres_data_Id;
+	
+	private String bills_data_Id;
+	
 	
 	
 	public Integer getId_patient_data() {
@@ -43,6 +49,31 @@ public class PatientsDataDTO {
 
 	public void setDoc_data_Id(String doc_data_Id) {
 		this.doc_data_Id = doc_data_Id;
+	}
+	
+
+	public String getImg_data_Id() {
+		return img_data_Id;
+	}
+
+	public void setImg_data_Id(String img_data_Id) {
+		this.img_data_Id = img_data_Id;
+	}
+
+	public String getPres_data_Id() {
+		return pres_data_Id;
+	}
+
+	public void setPres_data_Id(String pres_data_Id) {
+		this.pres_data_Id = pres_data_Id;
+	}
+
+	public String getBills_data_Id() {
+		return bills_data_Id;
+	}
+
+	public void setBills_data_Id(String bills_data_Id) {
+		this.bills_data_Id = bills_data_Id;
 	}
 
 	@Override
