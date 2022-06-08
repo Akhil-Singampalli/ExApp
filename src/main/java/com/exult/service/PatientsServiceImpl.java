@@ -97,6 +97,7 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			Patients patientNew = new Patients();
 			
+			patientNew.setIdPatient(patient.getPatientId());
 			patientNew.setPatientName(patient.getPatientName());
 			patientNew.setContactNumber(patient.getContactNumber());
 			patientNew.setEmailId(patient.getEmailId());

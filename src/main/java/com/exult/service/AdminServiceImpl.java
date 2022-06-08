@@ -110,8 +110,7 @@ public class AdminServiceImpl implements AdminService {
 	public String addDoctor(DoctorsDTO doc) throws ExappException {
 		Optional<Doctors> optDocC = docRepo.findByContactNumber(doc.getContactNumber());
 		Optional<Doctors> optDocE = docRepo.findByEmailId(doc.getEmailId());		
-		System.out.println(optDocC);
-		System.out.println(optDocE);
+		
 		if(optDocC.isPresent() && optDocE.isPresent()) {
 			throw new ExappException("");
 		}

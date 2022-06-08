@@ -67,7 +67,7 @@ public class Doctors {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(contactNumber, IdDoctor, doctorName, emailId, password);
+		return Objects.hash(IdDoctor, contactNumber, doctorName, emailId, password);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -78,7 +78,7 @@ public class Doctors {
 		if (getClass() != obj.getClass())
 			return false;
 		Doctors other = (Doctors) obj;
-		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(IdDoctor, other.IdDoctor)
+		return Objects.equals(IdDoctor, other.IdDoctor) && Objects.equals(contactNumber, other.contactNumber)
 				&& Objects.equals(doctorName, other.doctorName) && Objects.equals(emailId, other.emailId)
 				&& Objects.equals(password, other.password);
 	}

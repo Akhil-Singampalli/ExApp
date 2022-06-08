@@ -82,11 +82,9 @@ public class Patients {
 	}
 	
 	
-	
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(contactNumber, emailId, password, idPatient, patientName);
+		return Objects.hash(contactNumber, emailId, idPatient, password, patientName, patientsData);
 	}
 
 	@Override
@@ -99,8 +97,8 @@ public class Patients {
 			return false;
 		Patients other = (Patients) obj;
 		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(emailId, other.emailId)
-				&& Objects.equals(password, other.password) && Objects.equals(idPatient, other.idPatient)
-				&& Objects.equals(patientName, other.patientName);
+				&& Objects.equals(idPatient, other.idPatient) && Objects.equals(password, other.password)
+				&& Objects.equals(patientName, other.patientName) && Objects.equals(patientsData, other.patientsData);
 	}
 	@Override
 	public String toString() {

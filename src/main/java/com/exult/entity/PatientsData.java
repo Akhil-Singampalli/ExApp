@@ -1,6 +1,7 @@
 package com.exult.entity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -108,6 +109,28 @@ public class PatientsData {
 
 	public void setBills_data_id(String bills_data_id) {
 		this.bills_data_id = bills_data_id;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(bills_data_id, desk_data_id, doc_data_id, id_patient_data, img_data_id, pres_data_id);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PatientsData other = (PatientsData) obj;
+		return Objects.equals(bills_data_id, other.bills_data_id) && Objects.equals(desk_data_id, other.desk_data_id)
+				&& Objects.equals(doc_data_id, other.doc_data_id)
+				&& Objects.equals(id_patient_data, other.id_patient_data)
+				&& Objects.equals(img_data_id, other.img_data_id) && Objects.equals(pres_data_id, other.pres_data_id);
 	}
 
 	

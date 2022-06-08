@@ -86,7 +86,7 @@ public class Appointment {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(DoctorId, PatientId, aptDate, aptId, aptStatus, aptTime);
+		return Objects.hash(DoctorId, PatientId, adminId, aptDate, aptId, aptStatus, aptTime);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -98,8 +98,9 @@ public class Appointment {
 			return false;
 		Appointment other = (Appointment) obj;
 		return Objects.equals(DoctorId, other.DoctorId) && Objects.equals(PatientId, other.PatientId)
-				&& Objects.equals(aptDate, other.aptDate) && Objects.equals(aptId, other.aptId)
-				&& Objects.equals(aptStatus, other.aptStatus) && Objects.equals(aptTime, other.aptTime);
+				&& Objects.equals(adminId, other.adminId) && Objects.equals(aptDate, other.aptDate)
+				&& Objects.equals(aptId, other.aptId) && Objects.equals(aptStatus, other.aptStatus)
+				&& Objects.equals(aptTime, other.aptTime);
 	}
 	@Override
 	public String toString() {
