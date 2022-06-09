@@ -59,10 +59,7 @@ public class AdminDTO {
 		this.password = password;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(adminId, adminName, contactNumber, emailId, password);
-	}
+	
 
 	@Override
 	public boolean equals(Object obj) {

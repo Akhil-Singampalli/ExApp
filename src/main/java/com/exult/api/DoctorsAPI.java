@@ -23,6 +23,7 @@ import com.exult.dto.PatientsDTO;
 import com.exult.entity.Doctors;
 import com.exult.entity.Patients;
 import com.exult.service.DoctorsService;
+import com.exult.service.DoctorsServiceImpl;
 
 
 @CrossOrigin
@@ -31,7 +32,7 @@ import com.exult.service.DoctorsService;
 public class DoctorsAPI {
 
 	@Autowired
-	private DoctorsService doctorService;
+	private DoctorsServiceImpl doctorService;
 	
 	@Autowired
 	private Environment environment;

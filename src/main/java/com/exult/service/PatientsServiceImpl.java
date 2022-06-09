@@ -85,7 +85,10 @@ public class PatientsServiceImpl  implements PatientsService{
 		
 		Optional<Patients> optPatientC = patientRepo.findByContactNumber(patient.getContactNumber());
 		Optional<Patients> optPatientE = patientRepo.findByEmailId(patient.getEmailId());
-		List<DataFieldDTO> sampleDataFields = adminService.getPatientTempEdit();
+		System.out.println("here");
+		Optional<List<DataFieldDTO>> sampleDataFields = Optional.ofNullable(adminService.getPatientTempEdit());
+		System.out.println("here");
+		
 		
 		
 		if(optPatientC.isPresent() || optPatientE.isPresent()) {
@@ -109,20 +112,35 @@ public class PatientsServiceImpl  implements PatientsService{
 			List<DataField> datafieldlist = new ArrayList<>();
 			
 			
-			for(DataFieldDTO fieldDTO : sampleDataFields) {
+			if ( sampleDataFields.isEmpty()) {
 				
-				DataField dataField = new DataField();
 				
-				dataField.setFieldName(fieldDTO.getFieldName());
-				dataField.setFieldValue(fieldDTO.getFieldValue());
-				dataField.setFieldType(fieldDTO.getFieldType());
+					
+					DataField dataField = new DataField();
+					
+					dataField.setPatientData(patientsData);
+					
+					dataFieldRepo.save(dataField);
+					
+					datafieldlist.add(dataField);
+					
+			}else {
 				
-				dataField.setPatientData(patientsData);
-				
-				dataFieldRepo.save(dataField);
-				
-				datafieldlist.add(dataField);
-			}	
+				for(DataFieldDTO fieldDTO : sampleDataFields.get()) {
+					
+					DataField dataField = new DataField();
+					
+					dataField.setFieldName(fieldDTO.getFieldName());
+					dataField.setFieldValue(fieldDTO.getFieldValue());
+					dataField.setFieldType(fieldDTO.getFieldType());
+					
+					dataField.setPatientData(patientsData);
+					
+					dataFieldRepo.save(dataField);
+					
+					datafieldlist.add(dataField);
+				}	
+			}
 			
 			
 			patientDataRepo.save(patientsData);

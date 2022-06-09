@@ -147,10 +147,7 @@ public PatientsData getPatientData() {
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(fieldId, fieldName, fieldType, fieldValue, patientData);
-	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

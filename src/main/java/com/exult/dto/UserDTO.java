@@ -63,10 +63,6 @@ public class UserDTO {
 	}
 
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(EmailId, contactNumber, password, userId, userName);
-	}
 
 
 	@Override

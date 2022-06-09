@@ -242,8 +242,11 @@ public class AdminServiceImpl implements AdminService {
 	public List<DataFieldDTO> getPatientTempEdit() throws ExappException {
 		Iterable<PatientsData> patdatas = patientDataRepo.findAll(); 
 		
+		if (patdatas.iterator().hasNext()) {
+			List<DataField> dataFields = dataFieldRepo.findByPatientData(patdatas.iterator().next());
+			System.out.println("temp");
 		
-		List<DataField> dataFields = dataFieldRepo.findByPatientData(patdatas.iterator().next());
+		
 		
 		List<DataFieldDTO> dataFieldDTOs = new ArrayList<DataFieldDTO>();
 		
@@ -260,6 +263,9 @@ public class AdminServiceImpl implements AdminService {
 		
 		
 		return dataFieldDTOs;
+		
+		}
+		return null;
 	}
 }
 

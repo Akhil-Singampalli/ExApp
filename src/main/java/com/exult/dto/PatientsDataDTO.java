@@ -76,10 +76,7 @@ public class PatientsDataDTO {
 		this.bills_data_Id = bills_data_Id;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id_patient_data);
-	}
+	
 
 	@Override
 	public boolean equals(Object obj) {

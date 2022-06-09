@@ -39,6 +39,8 @@ public class PatientAPI {
 	
 	
 	
+	
+	
 	@RequestMapping(value = "/patientRegister", method = RequestMethod.POST)
 	public ResponseEntity<String> registerPatient(@RequestBody PatientsDTO patient){
 		try {

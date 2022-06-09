@@ -81,7 +81,7 @@ Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream(
 		ImagesFolder.setName("Images");
 		ImagesFolder.setParents(Collections.singletonList(file.getId()));
 		ImagesFolder.setMimeType("application/vnd.google-apps.folder");
-		System.out.println("Folder ID: " + ImagesFolder.getId());
+		
 		
 		File Imagesfile = service.files().create(ImagesFolder)
 			    .setFields("id")
@@ -91,7 +91,7 @@ Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream(
 		PrescriptionsFolder.setName("Prescriptions");
 		PrescriptionsFolder.setParents(Collections.singletonList(file.getId()));
 		PrescriptionsFolder.setMimeType("application/vnd.google-apps.folder");
-		System.out.println("Folder ID: " + PrescriptionsFolder.getId());
+		
 		
 		File Prescriptionsfile = service.files().create(PrescriptionsFolder)
 			    .setFields("id")
@@ -101,7 +101,7 @@ Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream(
 		BillsFolder.setName("Bills");
 		BillsFolder.setParents(Collections.singletonList(file.getId()));
 		BillsFolder.setMimeType("application/vnd.google-apps.folder");
-		System.out.println("Folder ID: " + BillsFolder.getId());
+		
 		
 		File Billsfile = service.files().create(BillsFolder)
 			    .setFields("id")

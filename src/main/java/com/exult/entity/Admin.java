@@ -57,10 +57,7 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(adminId, adminName, contactNumber, emailId, password);
-	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -81,11 +81,7 @@ public class Patients {
 		this.patientsData = patientsData;
 	}
 	
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(contactNumber, emailId, idPatient, password, patientName, patientsData);
-	}
+
 
 	@Override
 	public boolean equals(Object obj) {

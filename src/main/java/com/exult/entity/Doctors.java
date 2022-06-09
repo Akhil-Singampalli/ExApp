@@ -65,10 +65,7 @@ public class Doctors {
 		return "Doctors [doctorId=" + IdDoctor + ", doctorName=" + doctorName + ", emailId=" + emailId
 				+ ", contactNumber=" + contactNumber + ", password=" + password + "]";
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(IdDoctor, contactNumber, doctorName, emailId, password);
-	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -112,11 +112,7 @@ public class PatientsData {
 	}
 
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(bills_data_id, desk_data_id, doc_data_id, id_patient_data, img_data_id, pres_data_id);
-	}
-
+	
 
 	@Override
 	public boolean equals(Object obj) {

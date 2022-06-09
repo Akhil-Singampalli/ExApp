@@ -84,10 +84,7 @@ public class Appointment {
 	public void setAdminId(Integer adminId) {
 		this.adminId = adminId;
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(DoctorId, PatientId, adminId, aptDate, aptId, aptStatus, aptTime);
-	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
