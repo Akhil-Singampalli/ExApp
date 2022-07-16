@@ -107,10 +107,24 @@ Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream(
 			    .setFields("id")
 			    .execute();
 		
+		File caseSheet = new File();
+		BillsFolder.setName(pat.get().getIdPatient().toString());
+		BillsFolder.setParents(Collections.singletonList(file.getId()));
+		BillsFolder.setMimeType("application/vnd.google-apps.document");
+		
+		
+		File docsSheet = service.files().create(caseSheet)
+			    .setFields("id")
+			    .execute();
+		
+		String docsUrl = "https://docs.google.com/document/d/" + docsSheet.getId() + "/edit?usp=sharing";
+		
 		patData.setDesk_data_id(file.getId());
 		patData.setImg_data_id(Imagesfile.getId());
 		patData.setPres_data_id(Prescriptionsfile.getId());
 		patData.setBills_data_id(Billsfile.getId());
+		patData.setDoc_data_id(docsUrl);
+		
 		
 		patientDataRepo.save(patData);
 		

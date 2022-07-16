@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>com.exult</groupId>
 	<artifactId>exapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>0.0.1</version>
+	<packaging>war</packaging>
 	<name>exapp</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -176,6 +176,57 @@
   </processTypes>
 </configuration>
       </plugin>
+
+	  <plugin>
+    <groupId>org.apache.tomcat.maven</groupId>
+    <artifactId>tomcat7-maven-plugin</artifactId>
+    <version>2.2</version>
+    <configuration>
+    <container>
+        <containerId>tomcat8x</containerId>
+        <type>remote</type>
+    </container>
+    <configuration>
+        <type>runtime</type>
+        <properties>
+            <cargo.remote.username>admin</cargo.remote.username>
+            <cargo.remote.password>password</cargo.remote.password>
+            <cargo.tomcat.manager.url>http://82.180.162.253:8080/manager/text
+              </cargo.tomcat.manager.url>
+        </properties>
+    </configuration>
+</configuration>
+</plugin>
+<plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.5.0</version>
+            <configuration>
+                <container>
+        <containerId>tomcat8x</containerId>
+        <type>remote</type>
+    </container>
+    <configuration>
+        <type>runtime</type>
+        <properties>
+            <cargo.remote.username>admin</cargo.remote.username>
+            <cargo.remote.password>password</cargo.remote.password>
+            <cargo.tomcat.manager.url>http://82.180.162.253:8080/manager/text
+              </cargo.tomcat.manager.url>
+        </properties>
+    </configuration>
+		<deployables>
+                 <deployable>
+                     <groupId>${project.groupId}</groupId>
+                     <artifactId>${project.artifactId}</artifactId>
+                     <type>war</type>
+                     <properties>
+                         <context>/mywebapp</context>
+                     </properties>
+                 </deployable>
+             </deployables>
+            </configuration>
+       </plugin>
       </plugins>
 
     </build>

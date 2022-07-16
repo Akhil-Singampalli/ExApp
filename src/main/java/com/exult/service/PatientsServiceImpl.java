@@ -154,6 +154,7 @@ public class PatientsServiceImpl  implements PatientsService{
 				
 			
 			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
+			
 			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
 			
 			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")

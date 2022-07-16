@@ -106,7 +106,6 @@ public class DoctorsServiceImpl implements DoctorsService {
 			allpats.add(patDTO);
 		}
 		
-//		System.out.println(pats.toString());
 		
 		return allpats;
 	}
