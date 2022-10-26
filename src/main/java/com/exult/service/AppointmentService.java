@@ -1,5 +1,6 @@
 package com.exult.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.exult.dto.AppointmentDTO;
@@ -9,7 +10,7 @@ public interface AppointmentService {
 
 	public String bookAppointment(AppointmentDTO appointmentDTO) throws ExappException;
 	
-	public AppointmentDTO confirmAppointment(Integer aptId) throws ExappException;
+	public String confirmAppointment(Integer aptId,String googleEvent) throws ExappException;
 	
 	public AppointmentDTO cancelAppointment(Integer aptId) throws ExappException;
 	
@@ -20,6 +21,8 @@ public interface AppointmentService {
 	public List<AppointmentDTO> viewAllAppointment()throws ExappException;
 
 	public AppointmentDTO fetchAppointment(Integer aptId) throws ExappException;
+
+	public List<AppointmentDTO> getAptReminders(LocalDateTime date) throws ExappException;
 	
 	
 }

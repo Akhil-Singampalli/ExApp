@@ -1,11 +1,5 @@
 package com.exult.dto;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Objects;
-
-import com.exult.entity.Doctors;
-import com.exult.entity.Patients;
 
 
 public class AppointmentDTO {

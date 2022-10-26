@@ -37,7 +37,7 @@ import com.google.api.services.drive.model.File;
 
 
 
-@CrossOrigin
+@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
 @RestController
 @RequestMapping("/driveAPI")
 public class DriveAPI {

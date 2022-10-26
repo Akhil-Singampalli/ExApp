@@ -21,6 +21,8 @@ public interface AppointmentRepo extends CrudRepository<Appointment, Integer> {
 	@Query("SELECT apt FROM Appointment apt WHERE apt.DoctorId =(:doctorId) ")
 	Optional<List<Appointment>> findByDoctorid(Integer doctorId)throws ExappException;
 	
+	Optional<List<Appointment>> findByAptDate(String aptDate)throws ExappException;
+	
 
 
 }

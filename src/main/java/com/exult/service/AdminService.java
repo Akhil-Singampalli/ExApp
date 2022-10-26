@@ -8,6 +8,7 @@ import com.exult.dto.DoctorsDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
 import com.exult.exception.ExappException;
+import com.exult.util.OauthConfig;
 
 public interface AdminService {
 
@@ -18,4 +19,6 @@ public interface AdminService {
 	public String patientTempEdit(List<DataFieldDTO> datafield) throws ExappException;
 
 	public List<DataFieldDTO> getPatientTempEdit() throws ExappException;
+
+	public OauthConfig setOauthConfig(OauthConfig config) throws ExappException;
 }

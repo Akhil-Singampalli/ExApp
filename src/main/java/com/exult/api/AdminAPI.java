@@ -30,11 +30,12 @@ import com.exult.dto.PatientsDataDTO;
 import com.exult.service.AdminService;
 import com.exult.service.ExcelDataService;
 import com.exult.service.FileUploaderService;
+import com.exult.util.OauthConfig;
 
 
 
 @Validated
-@CrossOrigin
+@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
 @RestController
 @RequestMapping("/adminAPI")
 public class AdminAPI {
@@ -96,6 +97,16 @@ public class AdminAPI {
 		try {
 			List<DataFieldDTO> sampPatTemp = adminService.getPatientTempEdit();
 			return new ResponseEntity<List<DataFieldDTO>>(sampPatTemp,HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@GetMapping(value = "/updateConfig")
+	public ResponseEntity<OauthConfig> setOauthConfig(OauthConfig config){
+		try {
+			OauthConfig sampPatTemp = adminService.setOauthConfig(config);
+			return new ResponseEntity<OauthConfig>(sampPatTemp,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}

@@ -1,5 +1,6 @@
 package com.exult.service;
 
+import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.exult.entity.Patients;
 import com.exult.entity.PatientsData;
+import com.exult.repository.ConfigRepo;
 import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
 import com.google.api.client.auth.oauth2.Credential;
@@ -29,7 +31,7 @@ import com.google.api.services.drive.model.File;
 @Service
 public class DriveServiceImpl implements DriveService{
 	
-private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+	private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	
 	private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	
@@ -52,14 +54,19 @@ private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	@Autowired
 	private PatientDataRepo patientDataRepo;
 	
+	@Autowired
+	private ConfigRepo configRepo;
+	
 	@Override
 	public String createFolders(Integer patId) throws Exception {
 		
+		String confJsonString = configRepo.findById(1).get().getJsonconf();
 		
-Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream()).createScoped(SCOPES);
+		Credential credential = GoogleCredential.fromStream(new ByteArrayInputStream(confJsonString.getBytes())).createScoped(SCOPES);
 		
 		Optional<Patients> pat = patientRepo.findById(patId);
 		PatientsData patData = pat.get().getPatientsData();
+		
 		
 		GoogleClientRequestInitializer keyInitializer = new CommonGoogleClientRequestInitializer();
 		
@@ -68,7 +75,7 @@ Credential credential = GoogleCredential.fromStream(gdSecretKeys.getInputStream(
                 .build();
 		
 		File fileMetadata = new File();
-		fileMetadata.setName(patId.toString());
+		fileMetadata.setName(patId.toString() + " - " + pat.get().getPatientName());
 		fileMetadata.setParents(Collections.singletonList("1HlCViZoqau3NXcIcw3sYGEx0CFOVAj3I"));
 		fileMetadata.setMimeType("application/vnd.google-apps.folder");
 

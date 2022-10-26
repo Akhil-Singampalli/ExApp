@@ -155,10 +155,10 @@ public class PatientsServiceImpl  implements PatientsService{
 			
 			String body = "Hi"+" "+patientNew.getPatientName()+" you have been successfully registered to Exult Clinic";
 			
-			emailSenderService.sendNotification(patient.getEmailId(),body ,"Exult Registration" );
+			emailSenderService.sendMail(patient.getEmailId(),body ,"Exult Registration" );
 			
 			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")
-					  .header("authkey", "312379AYnyiHzkHSVm6161ac34P1")
+					  .header("authkey", "312379Aay5EN3Wmolq627385a5P1")
 					  .header("content-type", "application/JSON")
 					  .body("{\n  \"flow_id\": \"61701531163abd49a820db42\",\n  \"sender\": \"exults\",\n  \"mobiles\": \"919515050278 \",\n  \"VAR1\": \"VALUE 1\",\n  \"VAR2\": \"VALUE 2\"\n}")
 					  .asString();

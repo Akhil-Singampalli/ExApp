@@ -1,5 +1,6 @@
 package com.exult.api;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -26,7 +27,7 @@ import com.exult.service.AppointmentService;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
 @RestController
 @RequestMapping("/aptAPI")
 public class AppointmentAPI {
@@ -40,15 +41,8 @@ public class AppointmentAPI {
 	@PostMapping(value = "/bookApt")
 	public ResponseEntity<String> bookAppointment(@RequestBody AppointmentDTO appointment){
 		try {
+			
 			appointmentService.bookAppointment(appointment);
-			
-			HttpResponse<String> response = Unirest.post("https://api.msg91.com/api/v5/flow/")
-					  .header("authkey", "312379AYnyiHzkHSVm6161ac34P1")
-					  .header("content-type", "application/JSON")
-					  .body("{\n  \"flow_id\": \"6170120fd0d1872f0d155e7a\",\n  \"sender\": \"exults\",\n  \"mobiles\": \"919515050278 \",\n  \"VAR1\": \"VALUE 1\",\n  \"VAR2\": \"VALUE 2\"\n}")
-					  .asString();
-			System.out.println(response);
-			
 			
 			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS1"+"aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
 		}catch (Exception e){
@@ -56,17 +50,17 @@ public class AppointmentAPI {
 		}
 	}
 	
-	@RequestMapping(value = "/confirmApt/{aptId}",method = RequestMethod.PUT)
-	public ResponseEntity<String> confirmAppointment(@PathVariable Integer aptId){
+	@RequestMapping(value = "/confirmApt/{aptId}",method = RequestMethod.POST)
+	public ResponseEntity<String> confirmAppointment(@PathVariable Integer aptId,@RequestBody AppointmentDTO aptDto){
 		try {
-			appointmentService.confirmAppointment(aptId);
-			return new ResponseEntity<String>("aptAPI.APPOINTMENT_PATIENT_SUCCESS2",HttpStatus.OK);
+			String event= appointmentService.confirmAppointment(aptId,aptDto.getAptStatus());
+			return new ResponseEntity<String>(event,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
 		}
 	}
 	
-	@RequestMapping(value = "/cancelApt/{aptId}",method = RequestMethod.POST)
+	@RequestMapping(value = "/cancelApt/{aptId}",method = RequestMethod.PUT)
 	public ResponseEntity<String> cancelAppointment(@PathVariable Integer aptId){
 		try {
 			appointmentService.cancelAppointment(aptId);
@@ -76,7 +70,7 @@ public class AppointmentAPI {
 		}
 	}
 	
-	@RequestMapping(value = "/editApt/{aptId}",method = RequestMethod.POST)
+	@RequestMapping(value = "/editApt/{aptId}",method = RequestMethod.PUT)
 	public ResponseEntity<String> editAppointment(@PathVariable Integer aptId,@RequestBody AppointmentDTO aptUpdate){
 		try {
 			appointmentService.editAppointment(aptId, aptUpdate);
@@ -110,6 +104,16 @@ public class AppointmentAPI {
 	public ResponseEntity<List<AppointmentDTO>> viewAllAppointments(){
 		try {
 			List<AppointmentDTO> aptsDTO = appointmentService.viewAllAppointment();
+			return new ResponseEntity<List<AppointmentDTO>>(aptsDTO,HttpStatus.OK);
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));
+		}
+	}
+	
+	@RequestMapping(value = "/getRem/{date}",method = RequestMethod.GET)
+	public ResponseEntity<List<AppointmentDTO>> getAptReminders(@PathVariable LocalDateTime date){
+		try {
+			List<AppointmentDTO> aptsDTO = appointmentService.getAptReminders(date);
 			return new ResponseEntity<List<AppointmentDTO>>(aptsDTO,HttpStatus.OK);
 		}catch (Exception e){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,environment.getProperty(e.getMessage()));

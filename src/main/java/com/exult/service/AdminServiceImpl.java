@@ -1,5 +1,8 @@
 package com.exult.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +12,8 @@ import java.util.function.Consumer;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.exult.dto.AdminDTO;
@@ -17,17 +22,22 @@ import com.exult.dto.DoctorsDTO;
 import com.exult.dto.PatientsDTO;
 import com.exult.dto.PatientsDataDTO;
 import com.exult.entity.Admin;
+import com.exult.entity.Configurations;
 import com.exult.entity.DataField;
 import com.exult.entity.Doctors;
 import com.exult.entity.Patients;
 import com.exult.entity.PatientsData;
 import com.exult.exception.ExappException;
 import com.exult.repository.AdminRepo;
+import com.exult.repository.ConfigRepo;
 import com.exult.repository.DataFieldRepo;
 import com.exult.repository.DoctorRepo;
 import com.exult.repository.PatientDataRepo;
 import com.exult.repository.PatientRepo;
+import com.exult.util.OauthConfig;
 import com.google.common.collect.Iterables;
+
+import kong.unirest.json.JSONObject;
 
 @Service(value = "adminService")
 @Transactional
@@ -47,6 +57,12 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private DataFieldRepo dataFieldRepo;
+	
+	@Autowired
+	private ConfigRepo configRepo;
+	
+	@Value("${google.secret.key.path}")
+	private Resource gdSecretKeys;
 
 	@Override
 	public AdminDTO authenticateAdmin(String contactNumber, String password) throws ExappException {
@@ -266,6 +282,26 @@ public class AdminServiceImpl implements AdminService {
 		
 		}
 		return null;
+	}
+
+	@Override
+	public OauthConfig setOauthConfig(OauthConfig config) throws ExappException {
+			
+		Configurations configuration = configRepo.findById(1).get();
+		
+//		JSONObject json = new JSONObject();
+		String configString = "@";
+		try {
+			configString = new String(Files.readAllBytes(Paths.get(gdSecretKeys.getURI())));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		configuration.setJsonconf(configString);
+		
+		configRepo.save(configuration);
+		return config;
 	}
 }
 

@@ -59,14 +59,14 @@ public class LoginServiceImpl implements LoginService{
 					userObj.setUserName(patient.getPatientName());
 			
 					return userObj;
+				}else {
+					throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
 			
-		}
-		
-		if(optDoctors.isPresent()) {
+		}else if (optDoctors.isPresent()) {
 			try {
 				Doctors doctor = optDoctors.get();
 				String passwordFromDB = doctor.getPassword();
@@ -79,14 +79,14 @@ public class LoginServiceImpl implements LoginService{
 					userObj.setUserId(doctor.getDoctorId());
 					userObj.setUserName(doctor.getDoctorName());
 			
+				}else {
+					throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
 			
-		}
-		
-		if(optAdmin.isPresent()) {
+		}else if (optAdmin.isPresent()) {
 			try {
 				Admin admin = optAdmin.get();
 				String passwordFromDB = admin.getPassword();
@@ -97,10 +97,14 @@ public class LoginServiceImpl implements LoginService{
 					userObj.setUserId(admin.getAdminId());
 					userObj.setUserName(admin.getAdminName());
 	
+				}else {
+					throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 				}
 			}catch (Exception e) {
 				throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 			}
+		}else {
+			throw new ExappException("PatientService.HASH_FUNCTION_EXCEPTION");
 		}
 		
 		return userObj;	

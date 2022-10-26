@@ -1,55 +1,65 @@
 package com.exult.service;
 
+import java.util.Properties;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-
+import com.exult.entity.Configurations;
 import com.exult.exception.ExappException;
+import com.exult.repository.ConfigRepo;
 
 @Service(value = "emailSenderService")
 @Transactional
 public class EmailSenderServiceImpl implements EmailSenderService {
 	
 	@Autowired
-	private JavaMailSender notificationSender;
+    private JavaMailSender mailSender;
 	
 	@Autowired
-	private MailProperties  mailProperties;
+	private ConfigRepo configRepo;
+	
+//	@Autowired
+//	private MailProperties  mailProperties;
 	
 //	@Autowired
 //	private MimeMessageHelper helper;
 	
-	
-
+	@Autowired
+    private SimpleMailMessage preConfiguredMessage;
+  
+    /**
+     * This method will send compose and send the message 
+     * */
 	@Override
-	public void sendNotification(String to, String body, String subject) throws ExappException {
+    public void sendMail(String to, String subject, String body) throws ExappException
+    {
+		Configurations configs = configRepo.findById(1).get();
 		
-		SimpleMailMessage msg = new SimpleMailMessage();
-		
-		msg.setFrom("singampalliakhil@gmail.com");
-		msg.setTo(to);
-		msg.setText(body);
-		msg.setSubject(subject);
-		
-		notificationSender.send(msg);
-//		System.out.println("Email sent");
-
-	}
-
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(configs.getSendermail());
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+        
+    }
+	
 	@Override
 	public void sendAppointmentMail(String to, String subject, String patientName,String time,String date,Integer aptId)
 			throws ExappException, MessagingException {
 		
-		MimeMessage mail = notificationSender.createMimeMessage();
+		MimeMessage mail = mailSender.createMimeMessage();
 		String body = "<!DOCTYPE html>\r\n"
 				+ "\r\n"
 				+ "<html lang=\"en\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n"
@@ -177,11 +187,13 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 //		} catch (UnsupportedEncodingException e) {
 ////			log.error("error in mail service sendHtmlMail method"+e);
 //		}
+		
+		
 		helper.setFrom("singampalliakhil@gmail.com");
 		helper.setTo(to);
 		helper.setSubject(subject);
 		helper.setText(body, true);
-		notificationSender.send(mail);
+		mailSender.send(mail);
 
 
 	}
