@@ -21,15 +21,28 @@ public class ExappApplication extends SpringBootServletInitializer {
 		
 	}
 	
-	@Configuration
-	@EnableWebMvc
-	public class WebConfig implements WebMvcConfigurer {
-
-	    @Override
-	    public void addCorsMappings(CorsRegistry registry) {
-	        registry.addMapping("/**").allowedOrigins("*");
-	    }
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+			}
+		};
 	}
+//	
+//	@Configuration
+//	@EnableWebMvc
+//	public class WebConfig implements WebMvcConfigurer {
+//
+//	    @Override
+//	    public void addCorsMappings(CorsRegistry registry) {
+//	    	registry.addMapping("/exult/**")
+//            .allowedOrigins("http://bookappoint.com")
+//            .allowedMethods("GET","POST","PUT", "DELETE")
+//            .maxAge(3600);
+//	    }
+//	}
 	
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {

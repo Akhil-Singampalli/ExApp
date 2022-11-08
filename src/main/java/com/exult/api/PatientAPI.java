@@ -26,7 +26,7 @@ import com.exult.entity.PatientsData;
 import com.exult.service.PatientsService;
 
 //@Validated
-@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/patientAPI")
 public class PatientAPI {
@@ -36,9 +36,6 @@ public class PatientAPI {
 	
 	@Autowired
 	private Environment environment;
-	
-	
-	
 	
 	
 	@RequestMapping(value = "/patientRegister", method = RequestMethod.POST)

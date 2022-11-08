@@ -35,7 +35,7 @@ import com.exult.util.OauthConfig;
 
 
 @Validated
-@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/adminAPI")
 public class AdminAPI {

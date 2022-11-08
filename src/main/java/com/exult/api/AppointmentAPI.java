@@ -27,7 +27,7 @@ import com.exult.service.AppointmentService;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/aptAPI")
 public class AppointmentAPI {

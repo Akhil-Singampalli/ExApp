@@ -26,7 +26,7 @@ import com.exult.service.DoctorsService;
 import com.exult.service.DoctorsServiceImpl;
 
 
-@CrossOrigin(origins = "http://82.180.162.253", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/docAPI")
 public class DoctorsAPI {
